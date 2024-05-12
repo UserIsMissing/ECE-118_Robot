@@ -9,12 +9,12 @@
       <itemPath>IO_Ports.h</itemPath>
       <itemPath>pwm.h</itemPath>
       <itemPath>serial.h</itemPath>
-      <itemPath>C:/Users/qinyu/OneDrive/Desktop/Github Projects/ECE-118_Robot/Code/H-Bridge-Testing.X/LED.h</itemPath>
+      <itemPath>C:/Users/qinyu/Desktop/ECE-118_Robot/Code/H-Bridge-Testing.X/LED.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
                    projectFiles="true">
-      <itemPath>C:/Users/qinyu/OneDrive/Desktop/Github Projects/ECE-118_Robot/Code/H-Bridge-Testing.X/bootloader320.ld</itemPath>
+      <itemPath>C:/Users/qinyu/Desktop/ECE-118_Robot/Code/H-Bridge-Testing.X/bootloader320.ld</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -25,7 +25,7 @@
       <itemPath>Main_Test.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>serial.c</itemPath>
-      <itemPath>C:/Users/qinyu/OneDrive/Desktop/Github Projects/ECE-118_Robot/Code/H-Bridge-Testing.X/LED.c</itemPath>
+      <itemPath>C:/Users/qinyu/Desktop/ECE-118_Robot/Code/H-Bridge-Testing.X/LED.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -35,6 +35,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>C:/Users/qinyu/OneDrive/Desktop/Github Projects/ECE-118_Robot/Code/H-Bridge-Testing.X</Elem>
+    <Elem>C:\Users\qinyu\Desktop\ECE-118_Robot\Code\H-Bridge-Testing.X</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -46,7 +47,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.21</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -154,7 +155,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value=""/>
+        <property key="heap-size" value="1024"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

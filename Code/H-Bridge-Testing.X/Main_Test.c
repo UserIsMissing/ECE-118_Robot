@@ -51,5 +51,6 @@ int main(int argc, char **argv)
             printf("\r\n%x", (IO_PortsReadPort(PORTV) & PIN5) >> 7);
         }
         count++;
+        printf("asdf");
     }
 }

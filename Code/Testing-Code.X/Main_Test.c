@@ -15,7 +15,10 @@
 
 // #define MOTORTEST
 // #define IRTEST
-#define BEACONTEST
+// #define BEACONTEST
+// #define IOTEST
+#define TRACKWIRETEST
+
 /*
  *
  */
@@ -85,5 +88,38 @@ int main(int argc, char **argv)
         printf("\r\n%u", (IO_PortsReadPort(PORTV) & PIN5) >> 5);
     }
 
+#endif
+
+#ifdef IOTEST
+
+    IO_PortsSetPortOutputs(PORTV, PIN3);
+    IO_PortsSetPortOutputs(PORTV, PIN4);
+    IO_PortsSetPortOutputs(PORTV, PIN5);
+    IO_PortsSetPortOutputs(PORTV, PIN6);
+    IO_PortsSetPortOutputs(PORTV, PIN7);
+    IO_PortsSetPortOutputs(PORTV, PIN8);
+
+    IO_PortsWritePort(PORTV, PIN3);
+    IO_PortsWritePort(PORTV, PIN4);
+    IO_PortsWritePort(PORTV, PIN5);
+    IO_PortsWritePort(PORTV, PIN6);
+    IO_PortsWritePort(PORTV, PIN7);
+    IO_PortsWritePort(PORTV, PIN8);
+
+    printf("Succesfully Wrote to all Port V");
+
+#endif
+
+#ifdef TRACKWIRETEST
+    AD_AddPins(AD_PORTV3);
+    unsigned int count = 0;
+    while (1)
+    {
+        if (count % 50000 == 0)
+        {
+            printf("\r\n%u", AD_ReadADPin(AD_PORTV3));
+        }
+        count++;
+    }
 #endif
 }

@@ -13,9 +13,13 @@
 #include <IO_Ports.h>
 #include <LED.h>
 
+// #define MOTORTEST
+// #define IRTEST
+#define BEACONTEST
 /*
  *
  */
+
 int main(int argc, char **argv)
 {
     BOARD_Init();
@@ -23,7 +27,9 @@ int main(int argc, char **argv)
     AD_Init();
     PWM_Init();
     LED_Init();
+    LED_AddBanks(0x7);
 
+#ifdef MOTORTEST
     IO_PortsSetPortInputs(PORTV, PIN7);         // In from Limit Switch
     PWM_AddPins(PWM_PORTZ06);                   // PWM out to control H Bridge
     IO_PortsSetPortOutputs(PORTV, PIN5 | PIN6); // Digital Outs to In1 and In2
@@ -53,4 +59,31 @@ int main(int argc, char **argv)
         count++;
         printf("asdf");
     }
+#endif
+#ifdef IRTEST
+
+    unsigned int count = 0;
+    // IO_PortsSetPortInputs(PORTV, PIN5);
+    AD_AddPins(AD_PORTV5);
+    while (1)
+    {
+        // if (count % 50000000000000000 == 0)
+        // {
+        printf("\r\n%u", AD_ReadADPin(AD_PORTV5));
+        // }
+        count++;
+    }
+
+#endif
+
+#ifdef BEACONTEST
+    // AD_AddPins(AD_PORTV5);
+    IO_PortsSetPortInputs(PORTV, PIN5);
+    while (1)
+    {
+        // printf("\r\n%u", AD_PORTV5);
+        printf("\r\n%u", (IO_PortsReadPort(PORTV) & PIN5) >> 5);
+    }
+
+#endif
 }

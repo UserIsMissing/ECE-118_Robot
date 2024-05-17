@@ -25,6 +25,8 @@
 #include "TemplateService.h"
 #include <stdio.h>
 
+#include "IncludeHeaders.h"
+
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
@@ -71,9 +73,12 @@ uint8_t InitTemplateService(uint8_t Priority)
 
     // post the initial transition event
     ThisEvent.EventType = ES_INIT;
-    if (ES_PostToService(MyPriority, ThisEvent) == TRUE) {
+    if (ES_PostToService(MyPriority, ThisEvent) == TRUE)
+    {
         return TRUE;
-    } else {
+    }
+    else
+    {
         return FALSE;
     }
 }
@@ -97,9 +102,9 @@ uint8_t PostTemplateService(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the service,
- *        as this is called any time a new event is passed to the event queue. 
+ *        as this is called any time a new event is passed to the event queue.
  * @note Remember to rename to something appropriate.
- *       Returns ES_NO_EVENT if the event have been "consumed." 
+ *       Returns ES_NO_EVENT if the event have been "consumed."
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 ES_Event RunTemplateService(ES_Event ThisEvent)
 {
@@ -112,8 +117,10 @@ ES_Event RunTemplateService(ES_Event ThisEvent)
     static ES_EventTyp_t lastEvent = BATTERY_DISCONNECTED;
     ES_EventTyp_t curEvent;
     uint16_t batVoltage = AD_ReadADPin(BAT_VOLTAGE); // read the battery voltage
+    uint16_t Tape_FR = AD_ReadADPin(AD_PORTV5);      // read the front right tape sensor
 
-    switch (ThisEvent.EventType) {
+    switch (ThisEvent.EventType)
+    {
     case ES_INIT:
         // No hardware initialization or single time setups, those
         // go in the init function above.
@@ -122,26 +129,43 @@ ES_Event RunTemplateService(ES_Event ThisEvent)
         break;
 
     case ES_TIMEOUT:
-        if (batVoltage > BATTERY_DISCONNECT_THRESHOLD) { // is battery connected?
+        //------------------------------ Battery Check ------------------------------//
+        if (batVoltage > BATTERY_DISCONNECT_THRESHOLD)
+        { // is battery connected?
             curEvent = BATTERY_CONNECTED;
-        } else {
+        }
+        else
+        {
             curEvent = BATTERY_DISCONNECTED;
         }
-        if (curEvent != lastEvent) { // check for change from last time
+
+        //------------------------------ Front Right Tape Sensor ------------------------------//
+        if (Tape_FR == 0)
+        {
+            curEvent = ES_TAPE_FR;
+        }
+        else
+        {
+            curEvent = ES_NO_EVENT;
+        }
+
+        if (curEvent != lastEvent)
+        { // check for change from last time
             ReturnEvent.EventType = curEvent;
             ReturnEvent.EventParam = batVoltage;
             lastEvent = curEvent; // update history
-#ifndef SIMPLESERVICE_TEST           // keep this as is for test harness
-            PostGenericService(ReturnEvent);
+#ifndef SIMPLESERVICE_TEST        // keep this as is for test harness
+            // PostGenericService(ReturnEvent);
+            PostTemplateHSM(ReturnEvent);
 #else
             PostTemplateService(ReturnEvent);
-#endif   
+#endif
         }
         break;
-#ifdef SIMPLESERVICE_TEST     // keep this as is for test harness      
+#ifdef SIMPLESERVICE_TEST // keep this as is for test harness
     default:
         printf("\r\nEvent: %s\tParam: 0x%X",
-                EventNames[ThisEvent.EventType], ThisEvent.EventParam);
+               EventNames[ThisEvent.EventType], ThisEvent.EventParam);
         break;
 #endif
     }
@@ -152,4 +176,3 @@ ES_Event RunTemplateService(ES_Event ThisEvent)
 /*******************************************************************************
  * PRIVATE FUNCTIONs                                                           *
  ******************************************************************************/
-

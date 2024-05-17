@@ -13,11 +13,14 @@
 #include <IO_Ports.h>
 #include <LED.h>
 
+#include <IncludeHeaders.h>
+
 // #define MOTORTEST
-// #define IRTEST
+#define IRTEST
 // #define BEACONTEST
 // #define IOTEST
-#define TRACKWIRETEST
+// #define TRACKWIRETEST
+// #define IR_SERVICE_TEST
 
 /*
  *
@@ -31,6 +34,11 @@ int main(int argc, char **argv)
     PWM_Init();
     LED_Init();
     LED_AddBanks(0x7);
+    
+    AD_AddPins(AD_PORTV5);                  // Front Right IR Tape Sensor
+
+    IO_PortsSetPortOutputs(PORTZ, PIN3);    // output high to provide 3.3v VCC for IR sensor
+    IO_PortsWritePort(PORTZ, PIN3);         // output high to provide 3.3v VCC for IR sensor
 
 #ifdef MOTORTEST
     IO_PortsSetPortInputs(PORTV, PIN7);         // In from Limit Switch
@@ -122,4 +130,44 @@ int main(int argc, char **argv)
         count++;
     }
 #endif
+
+#ifdef IR_SERVICE_TEST // Cole's services test
+    ES_Return_t ErrorType;
+
+    printf("Starting IR Service/Events Test\r\n");
+    printf("using the 2nd Generation Events & Services Framework\r\n");
+
+    ES_Initialize();
+
+    // while (1)
+    // {
+    //     ES_Run();
+    // }
+    ES_Run();
+
+
+    // Your hardware initialization function calls go here
+
+    // now initialize the Events and Services Framework and start it running
+    ErrorType = ES_Initialize();
+    if (ErrorType == Success) {
+        ErrorType = ES_Run();
+
+    }
+    //if we got to here, there was an error
+    switch (ErrorType) {
+    case FailedPointer:
+        printf("Failed on NULL pointer");
+        break;
+    case FailedInit:
+        printf("Failed Initialization");
+        break;
+    default:
+        printf("Other Failure: %d", ErrorType);
+        break;
+    }
+    for (;;)
+        ;
+
+#endif // IR_SERVICE_TEST
 }

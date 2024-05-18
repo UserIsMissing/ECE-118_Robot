@@ -61,8 +61,7 @@ static uint8_t MyPriority;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitTemplateService(uint8_t Priority)
-{
+uint8_t InitTemplateService(uint8_t Priority) {
     ES_Event ThisEvent;
 
     MyPriority = Priority;
@@ -73,12 +72,9 @@ uint8_t InitTemplateService(uint8_t Priority)
 
     // post the initial transition event
     ThisEvent.EventType = ES_INIT;
-    if (ES_PostToService(MyPriority, ThisEvent) == TRUE)
-    {
+    if (ES_PostToService(MyPriority, ThisEvent) == TRUE) {
         return TRUE;
-    }
-    else
-    {
+    } else {
         return FALSE;
     }
 }
@@ -92,8 +88,7 @@ uint8_t InitTemplateService(uint8_t Priority)
  *        be posted to. Remember to rename to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t PostTemplateService(ES_Event ThisEvent)
-{
+uint8_t PostTemplateService(ES_Event ThisEvent) {
     return ES_PostToService(MyPriority, ThisEvent);
 }
 
@@ -106,8 +101,7 @@ uint8_t PostTemplateService(ES_Event ThisEvent)
  * @note Remember to rename to something appropriate.
  *       Returns ES_NO_EVENT if the event have been "consumed."
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-ES_Event RunTemplateService(ES_Event ThisEvent)
-{
+ES_Event RunTemplateService(ES_Event ThisEvent) {
     ES_Event ReturnEvent;
     ReturnEvent.EventType = ES_NO_EVENT; // assume no errors
 
@@ -117,56 +111,52 @@ ES_Event RunTemplateService(ES_Event ThisEvent)
     static ES_EventTyp_t lastEvent = BATTERY_DISCONNECTED;
     ES_EventTyp_t curEvent;
     uint16_t batVoltage = AD_ReadADPin(BAT_VOLTAGE); // read the battery voltage
-    uint16_t Tape_FR = AD_ReadADPin(AD_PORTV5);      // read the front right tape sensor
+    uint16_t TapeSensor_FR = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the front right tape sensor
 
-    switch (ThisEvent.EventType)
-    {
-    case ES_INIT:
-        // No hardware initialization or single time setups, those
-        // go in the init function above.
-        //
-        // This section is used to reset service for some reason
-        break;
+    switch (ThisEvent.EventType) {
+        case ES_INIT:
+            // No hardware initialization or single time setups, those
+            // go in the init function above.
+            //
+            // This section is used to reset service for some reason
+            break;
 
-    case ES_TIMEOUT:
-        //------------------------------ Battery Check ------------------------------//
-        if (batVoltage > BATTERY_DISCONNECT_THRESHOLD)
-        { // is battery connected?
-            curEvent = BATTERY_CONNECTED;
-        }
-        else
-        {
-            curEvent = BATTERY_DISCONNECTED;
-        }
+        case ES_TIMEOUT:
+            printf("IN ES TIMEOUT");
+            //------------------------------ Battery Check ------------------------------//
+//            if (batVoltage > BATTERY_DISCONNECT_THRESHOLD) { // is battery connected?
+//                curEvent = BATTERY_CONNECTED;
+//            } else {
+//                curEvent = BATTERY_DISCONNECTED;
+//            }
 
-        //------------------------------ Front Right Tape Sensor ------------------------------//
-        if (Tape_FR == 0)
-        {
-            curEvent = ES_TAPE_FR;
-        }
-        else
-        {
-            curEvent = ES_NO_EVENT;
-        }
+            //------------------------------ Front Right Tape Sensor ------------------------------//
+            if (TapeSensor_FR == 1) {
+                printf("/r/nFR TAPE EVENT SERVICED");
+                curEvent = ES_TAPE_FR;
+            } else {
+                printf("\r\nEVENT NOT DETECTED");
+                curEvent = ES_NO_EVENT;
+            }
 
-        if (curEvent != lastEvent)
-        { // check for change from last time
-            ReturnEvent.EventType = curEvent;
-            ReturnEvent.EventParam = batVoltage;
-            lastEvent = curEvent; // update history
+            if (curEvent != lastEvent) { // check for change from last time
+                printf("FR Tape Sensor Service\r\n");
+                ReturnEvent.EventType = curEvent;
+                ReturnEvent.EventParam = TapeSensor_FR;
+                lastEvent = curEvent; // update history
 #ifndef SIMPLESERVICE_TEST        // keep this as is for test harness
-            // PostGenericService(ReturnEvent);
-            PostTemplateHSM(ReturnEvent);
+                // PostGenericService(ReturnEvent);
+                PostTemplateHSM(ReturnEvent);
 #else
-            PostTemplateService(ReturnEvent);
+                PostTemplateService(ReturnEvent);
 #endif
-        }
-        break;
+            }
+            break;
 #ifdef SIMPLESERVICE_TEST // keep this as is for test harness
-    default:
-        printf("\r\nEvent: %s\tParam: 0x%X",
-               EventNames[ThisEvent.EventType], ThisEvent.EventParam);
-        break;
+        default:
+            printf("\r\nEvent: %s\tParam: 0x%X",
+                    EventNames[ThisEvent.EventType], ThisEvent.EventParam);
+            break;
 #endif
     }
 

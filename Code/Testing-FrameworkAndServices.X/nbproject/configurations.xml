@@ -84,7 +84,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.21</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -145,6 +145,9 @@
         <property key="use-iar" value="false"/>
         <property key="use-indirect-calls" value="false"/>
       </C32>
+      <C32-AR>
+        <property key="additional-options-chop-files" value="false"/>
+      </C32-AR>
       <C32-CO>
         <property key="coverage-enable" value=""/>
         <property key="stack-guidance" value="false"/>

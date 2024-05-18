@@ -182,6 +182,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         {
         case ES_TAPE_FR:
             if (ThisEvent.EventParam == 1)
+//            if (ThisEvent.EventType == ES_TAPE_FR)
             {
                 printf("Main HSM: \r\n");
                 printf("FR Tape Sensor Triggered\r\n");

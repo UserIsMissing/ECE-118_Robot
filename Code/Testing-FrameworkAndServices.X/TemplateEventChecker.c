@@ -120,27 +120,55 @@ uint8_t TemplateCheckBattery(void)
     return (returnVal);
 }
 
-uint8_t TapeSensor_FR(void)
+//------------------------- LEAVING THIS HERE but trying the bit mask method -------------------------//
+// #define TAPE_SENSOR_WORKING
+#define TAPE_SENSOR_BITMASK
+
+#ifdef TAPE_SENSOR_WORKING
+// uint8_t TapeSensor_FR(void)
+uint8_t TapeSensors_ReadAll(void)
 {
-    static ES_EventTyp_t lastEvent = ES_TAPE_FR;
+    static ES_EventTyp_t lastEvent = ES_TAPESENSORS;
     ES_EventTyp_t curEvent;
     ES_Event thisEvent;
     uint8_t returnVal = FALSE;
-    uint16_t TapeSensor_FR = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the tape sensor voltage
 
-    if (TapeSensor_FR == 1)
+                            // Cant get this working for pins V3, or V4
+    uint16_t TapeSensor_FL = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Left tape sensor
+    // uint16_t TapeSensor_FR = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
+    // uint16_t TapeSensor_RL = ((IO_PortsReadPort(PORTV) & PIN7) >> 5); // read the Rear Left tape sensor
+    // uint16_t TapeSensor_BOTHLEFT = TapeSensor_FL & TapeSensor_RL;
+    // uint16_t TapeSensor_BOTHFRONT = TapeSensor_FL & TapeSensor_FR;
+
+    if (TapeSensor_FL != 0)
     {
-        curEvent = ES_TAPE_FR;
+        curEvent = ES_TAPESENSORS;
     }
+    // else if (TapeSensor_FR != 0)
+    // {
+    //     curEvent = ES_TAPE_FR;
+    // }
+    // else if (TapeSensor_RL != 0)
+    // {
+    //     curEvent = ES_TAPE_RL;
+    // }
+    // else if (TapeSensor_BOTHLEFT != 0)
+    // {
+    //     curEvent = ES_TAPE_BOTH_LEFT;
+    // }
+    // else if (TapeSensor_BOTHFRONT != 0)
+    // {
+    //     curEvent = ES_TAPE_BOTH_FRONT;
+    // }
     else
     {
         curEvent = ES_NO_EVENT;
     }
     if (curEvent != lastEvent)
     { // check for change from last time
-        printf("FR Tape Sensor event\r\n");
+        printf("Tape Sensor event\r\n");
         thisEvent.EventType = curEvent;
-        thisEvent.EventParam = TapeSensor_FR;
+        thisEvent.EventParam = TapeSensor_FL;
         returnVal = TRUE;
         lastEvent = curEvent; // update history
 #ifndef EVENTCHECKER_TEST     // keep this as is for test harness
@@ -152,6 +180,70 @@ uint8_t TapeSensor_FR(void)
     }
     return (returnVal);
 }
+#endif // TAPE_SENSOR_WORKING
+
+//-------------------------
+
+#ifdef TAPE_SENSOR_BITMASK
+// Trying the bitmask method
+unsigned char TapeSensor_FL(void)
+{
+    return ((IO_PortsReadPort(PORTV) & PIN3)); // read the Front Left tape sensor
+}
+
+unsigned char TapeSensor_FR(void)
+{
+    return ((IO_PortsReadPort(PORTV) & PIN5)); // read the Front Right tape sensor
+}
+
+unsigned char TapeSensor_RL(void)
+{
+    return ((IO_PortsReadPort(PORTV) & PIN7)); // read the Rear Left tape sensor
+}
+
+unsigned char TapeSensors_AllBits(void)
+{
+    // uint16_t TapeSensor_FL = ((IO_PortsReadPort(PORTV) & PIN3) >> 5); // read the Front Left tape sensor
+    // uint16_t TapeSensor_FR = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
+    // uint16_t TapeSensor_RL = ((IO_PortsReadPort(PORTV) & PIN7) >> 5); // read the Rear Left tape sensor
+    // return (TapeSensor_FL | (TapeSensor_FR << 1) | (TapeSensor_RL << 2));
+    return ((IO_PortsReadPort(PORTV) & PIN3) | ((IO_PortsReadPort(PORTV) & PIN5) << 1) | ((IO_PortsReadPort(PORTV) & PIN7) << 2));
+}
+
+uint8_t TapeSensors_ReadAll(void)
+{
+    static ES_EventTyp_t lastEvent = ES_TAPESENSORS;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    uint16_t TapeSensors = TapeSensors_AllBits();
+
+    if ((TapeSensors == 0b1000) || (TapeSensors == 0b0100) || (TapeSensors == 0b0010) || (TapeSensors == 0b1100) || (TapeSensors == 0b1010))
+    {
+        curEvent = ES_TAPESENSORS;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = TapeSensors;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        // PostGenericService(thisEvent);
+        PostTemplateService(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+#endif // TAPE_SENSOR_BITMASK
 
 /*
  * The Test Harness for the event checkers is conditionally compiled using

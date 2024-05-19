@@ -49,6 +49,12 @@ typedef enum {
     NUMBEROFEVENTS,
 
     ES_TAPE_FR,  // Front Right Tape Sensor
+    ES_TAPE_FL,  // Front Left Tape Sensor
+    ES_TAPE_RL,  // Rear Left Tape Sensor
+    ES_TAPE_BOTH_LEFT,  // Both Left Tape Sensors
+    ES_TAPE_BOTH_FRONT,  // Both Front Tape Sensors
+
+    ES_TAPESENSORS,  // Tape Sensor Event
 } ES_EventTyp_t;
 
 static const char *EventNames[] = {
@@ -67,6 +73,12 @@ static const char *EventNames[] = {
 	"NUMBEROFEVENTS",
 
     "ES_TAPE_FR",    // Front Right Tape Sensor
+    "ES_TAPE_FL",    // Front Left Tape Sensor
+    "ES_TAPE_RL",    // Rear Left Tape Sensor
+    "ES_TAPE_BOTH_LEFT",    // Both Left Tape Sensors
+    "ES_TAPE_BOTH_FRONT",    // Both Front Tape Sensors
+
+    "ES_TAPESENSORS", // Tape Sensor Event
 };
 
 
@@ -78,7 +90,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST TapeSensor_FR
+#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */TapeSensors_ReadAll
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the

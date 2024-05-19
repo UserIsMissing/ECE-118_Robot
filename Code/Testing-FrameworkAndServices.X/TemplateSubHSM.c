@@ -130,12 +130,12 @@ ES_Event RunTemplateSubHSM(ES_Event ThisEvent)
 
     case SubFirstState: // in the first state, replace this with correct names
 
-        if (ThisEvent.EventType == ES_TAPE_FR)
+        if (ThisEvent.EventType == ES_TAPESENSORS)
         {
-            if (ThisEvent.EventParam == 1)
+            if (ThisEvent.EventParam != 0)
             {
                 printf("subHSM: \r\n");
-                printf("FR Tape Sensor Triggered");
+                printf("Tape Sensor Triggered");
             }
             nextState = SubFirstState;
             makeTransition = TRUE;

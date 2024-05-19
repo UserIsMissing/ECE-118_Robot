@@ -151,8 +151,6 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     ES_Tattle(); // trace call stack
 
-    uint16_t tapeSensorValue = AD_ReadADPin(AD_PORTV5);
-
     switch (CurrentState)
     {
     case InitPState:                        // If current state is initial Pseudo State
@@ -180,12 +178,12 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         ThisEvent = RunTemplateSubHSM(ThisEvent);
         switch (ThisEvent.EventType)
         {
-        case ES_TAPE_FR:
-            if (ThisEvent.EventParam == 1)
+        case ES_TAPESENSORS:
+            if (ThisEvent.EventParam != 0)
 //            if (ThisEvent.EventType == ES_TAPE_FR)
             {
                 printf("Main HSM: \r\n");
-                printf("FR Tape Sensor Triggered\r\n");
+                printf("Tape Sensor Triggered\r\n");
             }
             nextState = FirstState;
             makeTransition = TRUE;

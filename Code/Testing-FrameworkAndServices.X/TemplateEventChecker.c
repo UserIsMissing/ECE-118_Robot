@@ -127,7 +127,7 @@ uint8_t Read_TrackWireSensor(void)
     ES_EventTyp_t curEvent;
     ES_Event thisEvent;
     uint8_t returnVal = FALSE;
-    uint16_t trackWireValue = AD_ReadADPin(TRACK_WIRE); // read the track wire sensor
+    uint16_t trackWireValue = AD_ReadADPin(TRACKWIRE_PIN); // read the track wire sensor
 
     if (trackWireValue > TRACK_WIRE_VALUE)
     { // is track wire detected?
@@ -155,7 +155,7 @@ uint8_t Read_TrackWireSensor(void)
 
 //------------------------- LEAVING THIS HERE but trying the bit mask method -------------------------//
 // #define TAPE_SENSOR_WORKING
-#define TAPE_SENSOR_BITMASK
+// #define TAPE_SENSOR_BITMASK
 
 #ifdef TAPE_SENSOR_WORKING
 // uint8_t TapeSensor_FR(void)
@@ -167,32 +167,19 @@ uint8_t TapeSensors_ReadAll(void)
     uint8_t returnVal = FALSE;
 
                             // Cant get this working for pins V3, or V4
-    uint16_t TapeSensor_FL = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Left tape sensor
-    // uint16_t TapeSensor_FR = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
-    // uint16_t TapeSensor_RL = ((IO_PortsReadPort(PORTV) & PIN7) >> 5); // read the Rear Left tape sensor
-    // uint16_t TapeSensor_BOTHLEFT = TapeSensor_FL & TapeSensor_RL;
-    // uint16_t TapeSensor_BOTHFRONT = TapeSensor_FL & TapeSensor_FR;
+    uint16_t TapeSensor_FL = (IO_PortsReadPort(Tape_Pins_FL)); // read the Front Left tape sensor
+    uint16_t TapeSensor_FR = (IO_PortsReadPort(Tape_Pins_FR)); // read the Front Right tape sensor
 
-    if (TapeSensor_FL != 0)
+    if (TapeSensor_FL == 0)
     {
-        curEvent = ES_TAPESENSORS;
+        printf("Tape Sensor FL! \r\n");
+        curEvent = ES_TAPE_FL;
     }
-    // else if (TapeSensor_FR != 0)
-    // {
-    //     curEvent = ES_TAPE_FR;
-    // }
-    // else if (TapeSensor_RL != 0)
-    // {
-    //     curEvent = ES_TAPE_RL;
-    // }
-    // else if (TapeSensor_BOTHLEFT != 0)
-    // {
-    //     curEvent = ES_TAPE_BOTH_LEFT;
-    // }
-    // else if (TapeSensor_BOTHFRONT != 0)
-    // {
-    //     curEvent = ES_TAPE_BOTH_FRONT;
-    // }
+    else if (TapeSensor_FR == 0)
+    {
+        printf("Tape Sensor FR! \r\n");
+        curEvent = ES_TAPE_FR;
+    }
     else
     {
         curEvent = ES_NO_EVENT;
@@ -217,6 +204,9 @@ uint8_t TapeSensors_ReadAll(void)
 
 //-------------------------
 
+
+
+
 #ifdef TAPE_SENSOR_BITMASK
 // Trying the bitmask method
 unsigned char TapeSensor_FL(void)
@@ -239,8 +229,8 @@ unsigned char TapeSensors_AllBits(void)
     // uint16_t TapeSensor_FL = ((IO_PortsReadPort(PORTV) & PIN3) >> 5); // read the Front Left tape sensor
     // uint16_t TapeSensor_FR = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
     // uint16_t TapeSensor_RL = ((IO_PortsReadPort(PORTV) & PIN7) >> 5); // read the Rear Left tape sensor
-    // return (TapeSensor_FL | (TapeSensor_FR << 1) | (TapeSensor_RL << 2));
-    return ((IO_PortsReadPort(PORTV) & PIN3) | ((IO_PortsReadPort(PORTV) & PIN5) << 1) | ((IO_PortsReadPort(PORTV) & PIN7) << 2));
+    return (TapeSensor_FL | (TapeSensor_FR << 1) | (TapeSensor_RL << 2));
+    // return ((IO_PortsReadPort(PORTV) & PIN3) + ((IO_PortsReadPort(PORTV) & PIN5) << 1) + ((IO_PortsReadPort(PORTV) & PIN7) << 2));
 }
 
 uint8_t TapeSensors_ReadAll(void)

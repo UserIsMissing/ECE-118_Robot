@@ -27,6 +27,13 @@ This file is used to include all the necessary header files for the project.
 
 
 /* ------------------   DEFINES  ----------------- */
+// #define TRACKWIRE_PIN AD_PORTV8
+// #define TapeSensor_FL ((PORTV) & PIN3)
+// #define TapeSensor_FR ((PORTV) & PIN5)
+// #define TapeSensor_BL ((PORTV) & PIN7)
+
+
+/* ------------------   TESTS   ------------------ */
 // #define MOTORTEST
 // #define IRTEST
 // #define BEACONTEST

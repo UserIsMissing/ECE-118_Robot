@@ -37,6 +37,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 #define BATTERY_DISCONNECT_THRESHOLD 175
+#define TRACK_WIRE_VALUE 500
 
 /*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -108,6 +109,38 @@ uint8_t TemplateCheckBattery(void)
     { // check for change from last time
         thisEvent.EventType = curEvent;
         thisEvent.EventParam = batVoltage;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        // PostGenericService(thisEvent);
+        PostTemplateService(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+
+uint8_t Read_TrackWireSensor(void)
+{
+    static ES_EventTyp_t lastEvent = TRACKWIRE_NOT_DETECTED;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+    uint16_t trackWireValue = AD_ReadADPin(TRACK_WIRE); // read the track wire sensor
+
+    if (trackWireValue > TRACK_WIRE_VALUE)
+    { // is track wire detected?
+        curEvent = TRACKWIRE_DETECTED;
+    }
+    else
+    {
+        curEvent = TRACKWIRE_NOT_DETECTED;
+    }
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = trackWireValue;
         returnVal = TRUE;
         lastEvent = curEvent; // update history
 #ifndef EVENTCHECKER_TEST     // keep this as is for test harness

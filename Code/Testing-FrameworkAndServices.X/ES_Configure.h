@@ -48,6 +48,9 @@ typedef enum {
     BATTERY_DISCONNECTED,
     NUMBEROFEVENTS,
 
+    TRACKWIRE_DETECTED,
+    TRACKWIRE_NOT_DETECTED,
+
     ES_TAPE_FR,  // Front Right Tape Sensor
     ES_TAPE_FL,  // Front Left Tape Sensor
     ES_TAPE_RL,  // Rear Left Tape Sensor
@@ -71,6 +74,9 @@ static const char *EventNames[] = {
 	"BATTERY_CONNECTED",
 	"BATTERY_DISCONNECTED",
 	"NUMBEROFEVENTS",
+
+    "TRACKWIRE_DETECTED",
+    "TRACKWIRE_NOT_DETECTED",
 
     "ES_TAPE_FR",    // Front Right Tape Sensor
     "ES_TAPE_FL",    // Front Left Tape Sensor

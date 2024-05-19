@@ -59,6 +59,8 @@
  * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
 uint8_t TemplateCheckBattery(void);
 
+uint8_t Read_TrackWireSensor(void);
+
 // uint8_t TapeSensor_FR(void);
 
 unsigned char TapeSensors_AllBits(void);

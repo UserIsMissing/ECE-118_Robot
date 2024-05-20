@@ -64,10 +64,10 @@ uint8_t Read_TrackWireSensor(void);
 uint8_t TapeSensor_FR(void);
 uint8_t TapeSensor_FL(void);
 
-unsigned char TapeSensor_FL(void);
-unsigned char TapeSensor_FR(void);
-unsigned char TapeSensor_RL(void);
-unsigned char TapeSensors_AllBits(void);
+uint8_t TapeSensor_FL(void);
+uint8_t TapeSensor_FR(void);
+uint8_t TapeSensor_RL(void);
+uint8_t TapeSensors_AllBits(void);
 uint8_t TapeSensors_ReadAll(void);
 
 

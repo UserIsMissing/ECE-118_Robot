@@ -42,9 +42,27 @@ This file is used to include all the necessary header files for the project.
 /* ------------------   EVENTS TESTS   ------------------ */
 // #define TAPE_SENSOR_WORKING
 #define TAPE_SENSOR_BITMASK
+#define WALL_SENSOR_BITMASK
 
 
 /* ------------------   EVENTS DEFINES   ------------------ */
+#define TRACK_WIRE_VALUE 900
+
 #define TAPE_FL_MASK 0b001
 #define TAPE_FR_MASK 0b010
 #define TAPE_RL_MASK 0b100
+
+
+
+
+/* ------------------   LIST OF USED PINS   ------------------ 
+AD_PORTV8 - Trackwire Sensor
+
+PORTV, PIN3 - Front Left Tape Sensor
+PORTV, PIN5 - Front Right Tape Sensor
+PORTV, PIN7 - Rear Left Tape Sensor
+
+PORTW, PIN3 - Front Left Wall Sensor
+PORTW, PIN5 - Front Right Wall Sensor
+PORTW, PIN7 - Rear Left Wall Sensor
+*/

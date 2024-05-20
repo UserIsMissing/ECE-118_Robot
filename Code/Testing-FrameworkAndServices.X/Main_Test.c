@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     IO_PortsSetPortInputs(PORTV, PIN5);     // Front Right IR Tape Sensor
     IO_PortsSetPortInputs(PORTV, PIN7);     // Rear Left IR Tape Sensor
 
-    // AD_AddPins(AD_PORTV5);                  // Front Right IR Tape Sensor
+    AD_AddPins(AD_PORTV8);                  // Front Right IR Tape Sensor
 
     // IO_PortsSetPortOutputs(PORTZ, PIN3);    // output high to provide 3.3v VCC for IR sensor
     // IO_PortsWritePort(PORTZ, PIN3);         // output high to provide 3.3v VCC for IR sensor

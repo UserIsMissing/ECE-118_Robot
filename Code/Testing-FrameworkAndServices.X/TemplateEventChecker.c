@@ -37,7 +37,7 @@
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 #define BATTERY_DISCONNECT_THRESHOLD 175
-#define TRACK_WIRE_VALUE 500
+// #define TRACK_WIRE_VALUE 500
 
 /*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -113,7 +113,8 @@ uint8_t TemplateCheckBattery(void)
         lastEvent = curEvent; // update history
 #ifndef EVENTCHECKER_TEST     // keep this as is for test harness
         // PostGenericService(thisEvent);
-        PostTemplateService(thisEvent);
+        // PostTemplateService(thisEvent);
+        PostTemplateHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -121,6 +122,9 @@ uint8_t TemplateCheckBattery(void)
     return (returnVal);
 }
 
+/*******************************************************************************
+ * TRACK WIRE SENSOR                                                           *
+ ******************************************************************************/
 uint8_t Read_TrackWireSensor(void)
 {
     static ES_EventTyp_t lastEvent = TRACKWIRE_NOT_DETECTED;
@@ -129,8 +133,11 @@ uint8_t Read_TrackWireSensor(void)
     uint8_t returnVal = FALSE;
     uint16_t trackWireValue = AD_ReadADPin(AD_PORTV8); // read the track wire sensor
 
+        // printf("Track Wire Detected: %d \r\n", trackWireValue);
     if (trackWireValue > TRACK_WIRE_VALUE)
     { // is track wire detected?
+        // printf("Track Wire Detected: %d \r\n", trackWireValue);
+        printf("TRACKWIRE\r\n");
         curEvent = TRACKWIRE_DETECTED;
     }
     else
@@ -145,52 +152,7 @@ uint8_t Read_TrackWireSensor(void)
         lastEvent = curEvent; // update history
 #ifndef EVENTCHECKER_TEST     // keep this as is for test harness
         // PostGenericService(thisEvent);
-        PostTemplateService(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif
-    }
-    return (returnVal);
-}
-
-//------------------------- LEAVING THIS HERE but trying the bit mask method -------------------------//
-
-#ifdef TAPE_SENSOR_WORKING
-// uint8_t TapeSensor_FR(void)
-uint8_t TapeSensors_ReadAll(void)
-{
-    static ES_EventTyp_t lastEvent = ES_TAPESENSORS;
-    ES_EventTyp_t curEvent;
-    ES_Event thisEvent;
-    uint8_t returnVal = FALSE;
-
-                            // Cant get this working for pins V3, or V4
-    uint16_t TapeSensor_FL = ((IO_PortsReadPort(PORTV) & PIN3) >> 3); // read the Front Left tape sensor
-    uint16_t TapeSensor_FR = ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
-
-    if (TapeSensor_FL == 0)
-    {
-        printf("Tape Sensor FL Value: %d \r\n", TapeSensor_FL);
-        curEvent = ES_TAPE_FL;
-    }
-    else if (TapeSensor_FR == 0)
-    {
-        printf("Tape Sensor FR Value: %d \r\n", TapeSensor_FR);
-        curEvent = ES_TAPE_FR;
-    }
-    else
-    {
-        curEvent = ES_NO_EVENT;
-    }
-    if (curEvent != lastEvent)
-    { // check for change from last time
-        printf("Tape Sensor event\r\n");
-        thisEvent.EventType = curEvent;
-        thisEvent.EventParam = TapeSensor_FL;
-        returnVal = TRUE;
-        lastEvent = curEvent; // update history
-#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
-        // PostGenericService(thisEvent);
+        // PostTemplateService(thisEvent);
         PostTemplateHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
@@ -198,15 +160,10 @@ uint8_t TapeSensors_ReadAll(void)
     }
     return (returnVal);
 }
-#endif // TAPE_SENSOR_WORKING
 
-//-------------------------
-
-
-
-
-#ifdef TAPE_SENSOR_BITMASK
-// Trying the bitmask method
+/*******************************************************************************
+ * TAPE SENSOR WITH BITMASK                                                    *
+ ******************************************************************************/
 uint8_t TapeSensor_FL(void)
 {
     return ((IO_PortsReadPort(PORTV) & PIN3) >> 3); // read the Front Left tape sensor
@@ -238,7 +195,7 @@ uint8_t TapeSensors_ReadAll(void)
 
     if (TapeSensors != 0)
     {
-        printf("Tape Sensor %d \r\n", TapeSensors);
+        // printf("Tape Sensor %d \r\n", TapeSensors);
         curEvent = ES_TAPESENSORS;
     }
     else
@@ -254,14 +211,76 @@ uint8_t TapeSensors_ReadAll(void)
         lastEvent = curEvent; // update history
 #ifndef EVENTCHECKER_TEST     // keep this as is for test harness
         // PostGenericService(thisEvent);
-        PostTemplateService(thisEvent);
+        // PostTemplateService(thisEvent);
+        PostTemplateHSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
     }
     return (returnVal);
 }
-#endif // TAPE_SENSOR_BITMASK
+
+
+
+/*******************************************************************************
+ * WALL SENSOR WITH BITMASK                                                    *
+ ******************************************************************************/
+uint8_t WallSensor_FL(void)
+{
+    return !((IO_PortsReadPort(PORTW) & PIN3) >> 3); // read the Front Left tape sensor
+}
+
+uint8_t WallSensor_FR(void)
+{
+    return !((IO_PortsReadPort(PORTW) & PIN5) >> 5); // read the Front Right tape sensor
+}
+
+uint8_t WallSensor_RL(void)
+{
+    return !((IO_PortsReadPort(PORTW) & PIN7) >> 7); // read the Rear Left tape sensor
+}
+
+uint8_t WallSensors_AllBits(void)
+{
+    return (WallSensor_FL() | (WallSensor_FR() << 1) | (WallSensor_RL() << 2));
+}
+
+uint8_t WallSensors_ReadAll(void)
+{
+    static ES_EventTyp_t lastEvent = ES_WALLSENSORS;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    uint16_t WallSensors = WallSensors_AllBits();
+
+    if (WallSensors != 0)
+    {
+        // printf("Wall Sensor %d \r\n", WallSensors);
+        curEvent = ES_WALLSENSORS;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = WallSensors;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        // PostGenericService(thisEvent);
+        // PostTemplateService(thisEvent);
+        PostTemplateHSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+
 
 /*
  * The Test Harness for the event checkers is conditionally compiled using

@@ -123,26 +123,18 @@ ES_Event RunTemplateService(ES_Event ThisEvent) {
 
         case ES_TIMEOUT:
             printf("IN ES TIMEOUT");
-            //------------------------------ Battery Check ------------------------------//
-//            if (batVoltage > BATTERY_DISCONNECT_THRESHOLD) { // is battery connected?
-//                curEvent = BATTERY_CONNECTED;
-//            } else {
-//                curEvent = BATTERY_DISCONNECTED;
-//            }
+            // ------------------------------ Battery Check ------------------------------//
+           if (batVoltage > BATTERY_DISCONNECT_THRESHOLD) { // is battery connected?
+               curEvent = BATTERY_CONNECTED;
+           } else {
+               curEvent = BATTERY_DISCONNECTED;
+           }
 
-            //------------------------------ Front Right Tape Sensor ------------------------------//
-            if (TapeSensor_FR == 1) {
-                printf("/r/nFR TAPE EVENT SERVICED");
-                curEvent = ES_TAPE_FR;
-            } else {
-                printf("\r\nEVENT NOT DETECTED");
-                curEvent = ES_NO_EVENT;
-            }
 
             if (curEvent != lastEvent) { // check for change from last time
-                printf("FR Tape Sensor Service\r\n");
+                // printf("FR Tape Sensor Service\r\n");
                 ReturnEvent.EventType = curEvent;
-                ReturnEvent.EventParam = TapeSensor_FR;
+                ReturnEvent.EventParam = batVoltage;
                 lastEvent = curEvent; // update history
 #ifndef SIMPLESERVICE_TEST        // keep this as is for test harness
                 // PostGenericService(ReturnEvent);

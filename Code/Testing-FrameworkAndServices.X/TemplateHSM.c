@@ -47,11 +47,15 @@ typedef enum
 {
     InitPState,
     FirstState,
+    Random,
+    Snake,
 } TemplateHSMState_t;
 
 static const char *StateNames[] = {
     "InitPState",
     "FirstState",
+    "Random",
+    "Snake",
 };
 
 /*******************************************************************************
@@ -195,8 +199,17 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             break;
         }
         break;
+
+    case Random:
+    break;
+
+    case Snake:
+    break;
+
+    
     default: // all unhandled states fall into here
         break;
+
     } // end switch on Current State
 
     if (makeTransition == TRUE)

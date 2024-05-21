@@ -40,8 +40,10 @@ int main(int argc, char **argv) {
 
     AD_AddPins(AD_PORTV8);                  // Front Right IR Tape Sensor
 
-    // IO_PortsSetPortOutputs(PORTZ, PIN3);    // output high to provide 3.3v VCC for IR sensor
-    // IO_PortsWritePort(PORTZ, PIN3);         // output high to provide 3.3v VCC for IR sensor
+    /* ------------------ MOTORS ------------------ */
+    PWM_AddPins(PWM_PORTZ06);               // PWM out to control H Bridge
+    IO_PortsSetPortOutputs(PORTV, PIN5 | PIN6); // Digital Outs to In1 and In2
+    IO_PortsSetPortInputs(PORTV, PIN7); // In from Limit Switch
 
 #ifdef MOTORTEST
     IO_PortsSetPortInputs(PORTV, PIN7); // In from Limit Switch

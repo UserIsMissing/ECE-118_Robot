@@ -53,6 +53,10 @@ This file is used to include all the necessary header files for the project.
 #define TAPE_RL_MASK 0b100
 
 
+/* ------------------   MOTOR DEFINES   ------------------ */
+unsigned short int voltage;
+unsigned short int duty = 800
+unsigned short int count = 0;
 
 
 /* ------------------   LIST OF USED PINS   ------------------ 
@@ -65,4 +69,8 @@ PORTV, PIN7 - Rear Left Tape Sensor
 PORTW, PIN3 - Front Left Wall Sensor
 PORTW, PIN5 - Front Right Wall Sensor
 PORTW, PIN7 - Rear Left Wall Sensor
+
+PORTZ, PIN6 - PWM out to control H Bridge
+PORTV, PIN5 | PIN6 - Digital Outs to In1 and In2
+PORTV, PIN7 - In from Limit Switch
 */

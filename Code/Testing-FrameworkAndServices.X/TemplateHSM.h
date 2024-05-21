@@ -87,3 +87,20 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent);
 
 #endif /* HSM_Template_H */
 
+void Motors_Forward(signed short int speed);
+
+void Motors_Backward(void);
+
+void Pivot_Left(signed short int speed, signed short int duration);
+
+void Pivot_Right(signed short int speed, signed short int duration);
+
+void Tank_Left(signed short int speed, signed short int duration);
+
+void Tank_Right(signed short int speed, signed short int duration);
+
+void Motors_Stop(void);
+
+void Robot_LeftWheelSpeed(signed short int speed);
+
+void Robot_RightWheelSpeed(signed short int speed);

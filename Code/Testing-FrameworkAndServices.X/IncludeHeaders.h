@@ -1,7 +1,9 @@
-/* 
+/*****************************************************************************************
 This file is used to include all the necessary header files for the project.
-*/
+*****************************************************************************************/
 
+#ifndef INCLUDEHEADERS_H
+#define INCLUDEHEADERS_H
 
 /* ------------------   HEADERS   ------------------ */
 #include <stdio.h>
@@ -54,9 +56,24 @@ This file is used to include all the necessary header files for the project.
 
 
 /* ------------------   MOTOR DEFINES   ------------------ */
-unsigned short int voltage;
-unsigned short int duty = 800
-unsigned short int count = 0;
+#define MOTOR_MINIMUM -800
+#define MOTOR_MAXIMUM 800 
+
+// Setting the pins for the motors HIGH and LOW
+#define LEFT_PIN1_HIGH IO_PortsWritePort(PORTV, 0b10000)
+#define LEFT_PIN2_HIGH IO_PortsWritePort(PORTV, 0b100000)
+
+#define LEFT_PIN1_LOW IO_PortsClearPortBits(PORTV, 0b10000)
+#define LEFT_PIN2_LOW IO_PortsClearPortBits(PORTV, 0b100000)
+
+#define RIGHT_PIN1_HIGH IO_PortsWritePort(PORTV, 0b1000000)
+#define RIGHT_PIN2_HIGH IO_PortsWritePort(PORTV, 0b10000000)
+
+#define RIGHT_PIN1_LOW IO_PortsClearPortBits(PORTV, 0b1000000)
+#define RIGHT_PIN2_LOW IO_PortsClearPortBits(PORTV, 0b10000000)
+
+#define LEFT_PWM PWM_PORTZ06
+#define RIGHT_PWM PWM_PORTY12
 
 
 /* ------------------   LIST OF USED PINS   ------------------ 
@@ -74,3 +91,6 @@ PORTZ, PIN6 - PWM out to control H Bridge
 PORTV, PIN5 | PIN6 - Digital Outs to In1 and In2
 PORTV, PIN7 - In from Limit Switch
 */
+
+
+#endif /* INCLUDEHEADERS_H */

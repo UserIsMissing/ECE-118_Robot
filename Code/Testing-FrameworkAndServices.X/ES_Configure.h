@@ -121,6 +121,9 @@ static const char *EventNames[] = {
 
 #define GENERIC_NAMED_TIMER 0 /*make sure this is enabled above and posting to the correct state machine*/
 
+#define TEST_TIMER 1
+#define TEST_TIMER_CLICKS 5000
+
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 

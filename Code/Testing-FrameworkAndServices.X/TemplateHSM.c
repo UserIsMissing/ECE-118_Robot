@@ -49,6 +49,8 @@ typedef enum
     FirstState,
     Random,
     Snake,
+    RANDOMTEST,
+    TIMERTEST,
 } TemplateHSMState_t;
 
 static const char *StateNames[] = {
@@ -56,6 +58,8 @@ static const char *StateNames[] = {
     "FirstState",
     "Random",
     "Snake",
+    "RANDOMTEST",
+    "TIMERTEST",
 };
 
 /*******************************************************************************
@@ -74,7 +78,7 @@ void INIT_ALL(void)
     // LED_Init();
 
     // LED_AddBanks(0x7);
-    
+
     // AD_AddPins(AD_PORTV5);                  // Front Right IR Tape Sensor
 
     // IO_PortsSetPortOutputs(PORTZ, PIN3);    // output high to provide 3.3v VCC for IR sensor
@@ -165,10 +169,11 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             // initial state
             // Initialize all sub-state machines
             InitTemplateSubHSM();
+            ES_Timer_InitTimer(TEST_TIMER, TEST_TIMER_CLICKS);
             // now put the machine into the actual initial state
 
             INIT_ALL();
-            nextState = FirstState;
+            nextState = TIMERTEST;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
             ;
@@ -184,7 +189,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         {
         case ES_TAPESENSORS:
             if (ThisEvent.EventParam != 0)
-//            if (ThisEvent.EventType == ES_TAPE_FR)
+            //            if (ThisEvent.EventType == ES_TAPE_FR)
             {
                 printf("Main HSM: \r\n");
                 printf("Tape Sensor Triggered\r\n");
@@ -200,13 +205,63 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         break;
 
+    case TIMERTEST:
+        switch (ThisEvent.EventType)
+        {
+        case ES_TIMEOUT:
+            ES_Timer_InitTimer(TEST_TIMER, TEST_TIMER_CLICKS);
+            printf("5 second timer up\r\n");
+            nextState = TIMERTEST;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+
+    case RANDOMTEST:
+        Motors_Forward(MOTOR_MAXIMUM);
+        switch (ThisEvent.EventType)
+        {
+        case ES_ENTRY:
+
+        case ES_TAPESENSORS:
+            Motors_Stop();
+            nextState = RANDOMTEST;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+
+        case ES_WALLSENSORS:
+            Motors_Forward(MOTOR_MAXIMUM);
+            nextState = RANDOMTEST;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+        break;
+
     case Random:
-    break;
+        Motors_Forward(MOTOR_MAXIMUM);
+        switch (ThisEvent.EventType)
+        {
+        case ES_TAPESENSORS:
+            Tank_Left(MOTOR_MAXIMUM, 1000);
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+
+        case ES_WALLSENSORS:
+            Motors_Stop();
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+        break;
 
     case Snake:
-    break;
+        break;
 
-    
     default: // all unhandled states fall into here
         break;
 
@@ -227,3 +282,82 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 /*******************************************************************************
  * PRIVATE FUNCTIONS                                                           *
  ******************************************************************************/
+void Motors_Forward(signed short int speed)
+{
+    Robot_RightWheelSpeed(speed);
+    Robot_LeftWheelSpeed(speed);
+}
+
+void Motors_Backward(void)
+{
+    Robot_RightWheelSpeed(-400);
+    Robot_LeftWheelSpeed(-400);
+}
+
+void Pivot_Left(signed short int speed, signed short int duration)
+{
+}
+
+void Pivot_Right(signed short int speed, signed short int duration)
+{
+}
+
+void Tank_Left(signed short int speed, signed short int duration)
+{
+}
+
+void Tank_Right(signed short int speed, signed short int duration)
+{
+}
+
+void Motors_Stop(void)
+{
+    Robot_RightWheelSpeed(0);
+    Robot_LeftWheelSpeed(0);
+}
+
+void Robot_LeftWheelSpeed(signed short int speed)
+{
+    if (speed > 0)
+    {
+        LEFT_PIN1_LOW;
+        LEFT_PIN2_HIGH;
+        PWM_SetDutyCycle(LEFT_PWM, speed);
+    }
+    else if (speed < 0)
+    {
+        LEFT_PIN1_HIGH;
+        LEFT_PIN2_LOW;
+        signed short int negative_speed = speed * (-1);
+        PWM_SetDutyCycle(LEFT_PWM, negative_speed);
+    }
+    else if (speed == 0)
+    {
+        LEFT_PIN1_LOW;
+        LEFT_PIN2_LOW;
+        PWM_SetDutyCycle(LEFT_PWM, 0);
+    }
+}
+
+void Robot_RightWheelSpeed(signed short int speed)
+{
+    if (speed > 0)
+    {
+        RIGHT_PIN1_LOW;
+        RIGHT_PIN2_HIGH;
+        PWM_SetDutyCycle(RIGHT_PWM, speed);
+    }
+    else if (speed < 0)
+    {
+        RIGHT_PIN1_HIGH;
+        RIGHT_PIN2_LOW;
+        signed short int negative_speed = speed * (-1);
+        PWM_SetDutyCycle(RIGHT_PWM, negative_speed);
+    }
+    else if (speed == 0)
+    {
+        RIGHT_PIN1_LOW;
+        RIGHT_PIN2_LOW;
+        PWM_SetDutyCycle(RIGHT_PWM, 0);
+    }
+}

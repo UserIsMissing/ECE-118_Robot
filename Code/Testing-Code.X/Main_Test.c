@@ -13,11 +13,11 @@
 #include <IO_Ports.h>
 #include <LED.h>
 
-// #define MOTORTEST
+#define MOTORTEST
 // #define IRTEST
 // #define BEACONTEST
 // #define IOTEST
-#define TRACKWIRETEST
+// #define TRACKWIRETEST
 
 /*
  *
@@ -43,6 +43,10 @@ int main(int argc, char **argv)
     unsigned short int count = 0;
     while (1)
     {
+        IO_PortsWritePort(PORTV, PIN6);
+        PWM_SetDutyCycle(PWM_PORTZ06, duty);
+        /*
+
         unsigned short int Switch = (IO_PortsReadPort(PORTV) & PIN7) >> 7;
         IO_PortsWritePort(PORTV, PIN6);
         if (Switch == 1)
@@ -60,7 +64,7 @@ int main(int argc, char **argv)
             printf("\r\n%x", (IO_PortsReadPort(PORTV) & PIN5) >> 7);
         }
         count++;
-        printf("asdf");
+        */
     }
 #endif
 #ifdef IRTEST

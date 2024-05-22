@@ -16,18 +16,17 @@
 #include <IncludeHeaders.h>
 
 // #define MOTORTEST
-#define IRTEST
+//#define IRTEST
 // #define BEACONTEST
 // #define IOTEST
 // #define TRACKWIRETEST
-// #define MAINLOOP
+#define MAINLOOP
 
 /*
  *
  */
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     BOARD_Init();
     SERIAL_Init();
     AD_Init();
@@ -59,14 +58,13 @@ int main(int argc, char **argv)
     IO_PortsSetPortOutputs(PORTY, PIN6); // Y5 and Y6 comboe pins are fried
 
 #ifdef MOTORTEST
-    PWM_AddPins(PWM_PORTY10);                   // PWM out to control H Bridge
-    PWM_AddPins(PWM_PORTY12);                   // PWM out to control H Bridge
+    PWM_AddPins(PWM_PORTY10); // PWM out to control H Bridge
+    PWM_AddPins(PWM_PORTY12); // PWM out to control H Bridge
     IO_PortsSetPortOutputs(PORTZ, PIN8); // Digital Outs to In1 and In2
     IO_PortsSetPortOutputs(PORTY, PIN3); // Digital Outs to In1 and In2
 
     unsigned short int duty = 1000;
-    while (1)
-    {
+    while (1) {
         printf("\r\nMotor Test");
         IO_PortsWritePort(PORTZ, PIN8);
         IO_PortsWritePort(PORTY, PIN3);
@@ -83,14 +81,11 @@ int main(int argc, char **argv)
     IO_PortsSetPortInputs(PORTV, PIN3);
     IO_PortsSetPortInputs(PORTV, PIN5);
     // AD_AddPins(AD_PORTV5);
-    while (1)
-    {
-        if ((IO_PortsReadPort(PORTV) & PIN3) == 1)
-        {
+    while (1) {
+        if (((IO_PortsReadPort(PORTV) & PIN3) >> 3) == 0) {
             printf("\r\nTape Sensor");
         }
-        if ((IO_PortsReadPort(PORTV) & PIN5) == 1)
-        {
+        if (((IO_PortsReadPort(PORTV) & PIN5) >> 5) == 0) {
             printf("\r\nTape Sensor");
         }
     }
@@ -100,8 +95,7 @@ int main(int argc, char **argv)
 #ifdef BEACONTEST
     // AD_AddPins(AD_PORTV5);
     IO_PortsSetPortInputs(PORTV, PIN5);
-    while (1)
-    {
+    while (1) {
         // printf("\r\n%u", AD_PORTV5);
         printf("\r\n%u", (IO_PortsReadPort(PORTV) & PIN5) >> 5);
     }
@@ -131,10 +125,8 @@ int main(int argc, char **argv)
 #ifdef TRACKWIRETEST
     AD_AddPins(AD_PORTV3);
     unsigned int count = 0;
-    while (1)
-    {
-        if (count % 50000 == 0)
-        {
+    while (1) {
+        if (count % 50000 == 0) {
             printf("\r\n%u", AD_ReadADPin(AD_PORTV3));
         }
         count++;
@@ -159,22 +151,20 @@ int main(int argc, char **argv)
 
     // now initialize the Events and Services Framework and start it running
     ErrorType = ES_Initialize();
-    if (ErrorType == Success)
-    {
+    if (ErrorType == Success) {
         ErrorType = ES_Run();
     }
     // if we got to here, there was an error
-    switch (ErrorType)
-    {
-    case FailedPointer:
-        printf("Failed on NULL pointer");
-        break;
-    case FailedInit:
-        printf("Failed Initialization");
-        break;
-    default:
-        printf("Other Failure: %d", ErrorType);
-        break;
+    switch (ErrorType) {
+        case FailedPointer:
+            printf("Failed on NULL pointer");
+            break;
+        case FailedInit:
+            printf("Failed Initialization");
+            break;
+        default:
+            printf("Other Failure: %d", ErrorType);
+            break;
     }
     for (;;)
         ;

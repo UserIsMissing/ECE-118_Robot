@@ -134,7 +134,7 @@ uint8_t Read_TrackWireSensor(void)
     uint8_t returnVal = FALSE;
     uint16_t trackWireValue = AD_ReadADPin(AD_PORTV8); // read the track wire sensor
 
-        // printf("Track Wire Detected: %d \r\n", trackWireValue);
+    // printf("Track Wire Detected: %d \r\n", trackWireValue);
     if (trackWireValue > TRACK_WIRE_VALUE)
     { // is track wire detected?
         // printf("Track Wire Detected: %d \r\n", trackWireValue);
@@ -178,7 +178,7 @@ uint8_t TapeSensor_FR(void)
 
 uint8_t TapeSensor_RL(void)
 {
-    return ((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
+    //    return ((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
 }
 
 uint8_t TapeSensors_AllBits(void)
@@ -197,7 +197,7 @@ uint8_t TapeSensors_ReadAll(void)
 
     if (TapeSensors != 0)
     {
-        // printf("Tape Sensor %d \r\n", TapeSensors);
+        //         printf("EVENT!!! Tape Sensor %d \r\n", TapeSensors);
         curEvent = ES_TAPESENSORS;
     }
     else
@@ -207,6 +207,8 @@ uint8_t TapeSensors_ReadAll(void)
 
     if (curEvent != lastEvent)
     { // check for change from last time
+        printf("EVENT: %d\r\n", thisEvent.EventType);
+
         thisEvent.EventType = curEvent;
         thisEvent.EventParam = TapeSensors;
         returnVal = TRUE;
@@ -222,8 +224,6 @@ uint8_t TapeSensors_ReadAll(void)
     }
     return (returnVal);
 }
-
-
 
 /*******************************************************************************
  * WALL SENSOR WITH BITMASK                                                    *
@@ -284,7 +284,6 @@ uint8_t WallSensors_ReadAll(void)
     }
     return (returnVal);
 }
-
 
 /*
  * The Test Harness for the event checkers is conditionally compiled using

@@ -220,6 +220,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case TEST_IRSENSOR:
+        printf("Made it to TEST_IRSENSOR\r\n");
         if (ThisEvent.EventType == ES_TAPESENSORS)
         {
             printf("HSM\r\n");

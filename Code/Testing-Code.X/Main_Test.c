@@ -32,16 +32,16 @@ int main(int argc, char **argv) {
     LED_AddBanks(0x7);
 
 #ifdef MOTORTEST
-    IO_PortsSetPortOutputs(PORTY, PIN3); //in3 
-    IO_PortsSetPortOutputs(PORTZ, PIN8); //in1
+    IO_PortsSetPortOutputs(PORTY, PIN4); //in3 
+    IO_PortsSetPortOutputs(PORTZ, PIN7); //in1
 
     PWM_AddPins(PWM_PORTY12); // PWM out to control H Bridge
     PWM_AddPins(PWM_PORTY10);
 
     unsigned short int duty = 1000;
     while (1) {
-        IO_PortsWritePort(PORTY, PIN3);
-        IO_PortsWritePort(PORTZ, PIN8);
+        IO_PortsWritePort(PORTY, PIN4);
+        IO_PortsWritePort(PORTZ, PIN7);
 
         PWM_SetDutyCycle(PWM_PORTY12, duty);
         PWM_SetDutyCycle(PWM_PORTY10, duty);

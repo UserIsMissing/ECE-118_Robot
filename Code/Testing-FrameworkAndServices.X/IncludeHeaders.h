@@ -54,6 +54,7 @@ This file is used to include all the necessary header files for the project.
 #define TAPE_FL_MASK 0b001
 #define TAPE_FR_MASK 0b010
 #define TAPE_RL_MASK 0b100
+#define TAPE_BOTH_FRONT_MASK 0b110
 
 
 /* ------------------   MOTOR DEFINES   ------------------ */

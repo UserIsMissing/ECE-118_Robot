@@ -220,12 +220,16 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case TEST_IRSENSOR:
-        printf("Made it to TEST_IRSENSOR\r\n");
+        // printf("Made it to TEST_IRSENSOR\r\n");
+        // printf("%d", ThisEvent.EventType);
         if (ThisEvent.EventType == ES_TAPESENSORS)
         {
-            printf("HSM\r\n");
-            printf("Tape Sensor Triggered\r\n");
+            // printf("HSM\r\n");
+            // printf("Tape Sensor Triggered\r\n");
         }
+        // nextState = TEST_IRSENSOR;
+        // makeTransition = TRUE;
+        // ThisEvent.EventType = ES_NO_EVENT;
         break;
 
     case RANDOMTEST:

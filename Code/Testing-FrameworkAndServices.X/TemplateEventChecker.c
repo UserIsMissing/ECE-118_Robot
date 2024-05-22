@@ -168,17 +168,17 @@ uint8_t Read_TrackWireSensor(void)
  ******************************************************************************/
 uint8_t TapeSensor_FL(void)
 {
-    return ((IO_PortsReadPort(PORTV) & PIN3) >> 3); // read the Front Left tape sensor
+    return !((IO_PortsReadPort(PORTV) & PIN3) >> 3); // read the Front Left tape sensor
 }
 
 uint8_t TapeSensor_FR(void)
 {
-    return ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
+    return !((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
 }
 
 uint8_t TapeSensor_RL(void)
 {
-    //    return ((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
+    return !((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
 }
 
 uint8_t TapeSensors_AllBits(void)
@@ -195,9 +195,10 @@ uint8_t TapeSensors_ReadAll(void)
 
     uint16_t TapeSensors = TapeSensors_AllBits();
 
-    if (TapeSensors != 0)
+    // if (TapeSensors != 0)
+    if ((TapeSensors == TAPE_FL_MASK) || (TapeSensors == TAPE_FR_MASK) || (TapeSensors == TAPE_RL_MASK) || (TapeSensors == TAPE_BOTH_FRONT_MASK))
     {
-        //         printf("EVENT!!! Tape Sensor %d \r\n", TapeSensors);
+        // printf("\r\nEVENT!!! Tape Sensor %d", TapeSensors);
         curEvent = ES_TAPESENSORS;
     }
     else
@@ -207,7 +208,7 @@ uint8_t TapeSensors_ReadAll(void)
 
     if (curEvent != lastEvent)
     { // check for change from last time
-        printf("EVENT: %d\r\n", thisEvent.EventType);
+        // printf("\r\nEVENT: %d", thisEvent.EventParam);
 
         thisEvent.EventType = curEvent;
         thisEvent.EventParam = TapeSensors;

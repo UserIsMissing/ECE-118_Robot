@@ -16,12 +16,13 @@ This file is used to include all the necessary header files for the project.
 #include <LED.h>
 #include <ES_Configure.h>
 #include <ES_Framework.h>
+#include <TemplateEventChecker.h>
 #include <TemplateService.h>
-#include <ES_CheckEvents.h>  // not needed for this project?
+#include <ES_CheckEvents.h>
+// #include <TemplateFSM.h>
 #include <TemplateHSM.h>
 #include <TemplateSubHSM.h>
 #include <ES_Timers.h>
-#include <TemplateEventChecker.h>
 #include <ES_Events.h>
 #include <ES_General.h>
 
@@ -56,23 +57,23 @@ This file is used to include all the necessary header files for the project.
 
 
 /* ------------------   MOTOR DEFINES   ------------------ */
-#define MOTOR_MINIMUM -800
-#define MOTOR_MAXIMUM 800 
+#define MOTOR_MINIMUM -1000
+#define MOTOR_MAXIMUM 1000 
 
 // Setting the pins for the motors HIGH and LOW
-#define LEFT_PIN1_HIGH IO_PortsWritePort(PORTV, 0b10000)
-#define LEFT_PIN2_HIGH IO_PortsWritePort(PORTV, 0b100000)
+#define LEFT_PIN1_HIGH IO_PortsWritePort(PORTY, PIN3)
+#define LEFT_PIN2_HIGH IO_PortsWritePort(PORTY, PIN4)
 
-#define LEFT_PIN1_LOW IO_PortsClearPortBits(PORTV, 0b10000)
-#define LEFT_PIN2_LOW IO_PortsClearPortBits(PORTV, 0b100000)
+#define LEFT_PIN1_LOW IO_PortsClearPortBits(PORTY, PIN3)
+#define LEFT_PIN2_LOW IO_PortsClearPortBits(PORTY, PIN4)
 
-#define RIGHT_PIN1_HIGH IO_PortsWritePort(PORTV, 0b1000000)
-#define RIGHT_PIN2_HIGH IO_PortsWritePort(PORTV, 0b10000000)
+#define RIGHT_PIN1_HIGH IO_PortsWritePort(PORTZ, PIN7)
+#define RIGHT_PIN2_HIGH IO_PortsWritePort(PORTZ, PIN8)
 
-#define RIGHT_PIN1_LOW IO_PortsClearPortBits(PORTV, 0b1000000)
-#define RIGHT_PIN2_LOW IO_PortsClearPortBits(PORTV, 0b10000000)
+#define RIGHT_PIN1_LOW IO_PortsClearPortBits(PORTZ, PIN7)
+#define RIGHT_PIN2_LOW IO_PortsClearPortBits(PORTZ, PIN8)
 
-#define LEFT_PWM PWM_PORTZ06
+#define LEFT_PWM PWM_PORTY10
 #define RIGHT_PWM PWM_PORTY12
 
 
@@ -86,6 +87,11 @@ PORTV, PIN7 - Rear Left Tape Sensor
 PORTW, PIN3 - Front Left Wall Sensor
 PORTW, PIN5 - Front Right Wall Sensor
 PORTW, PIN7 - Rear Left Wall Sensor
+
+PORTY, PIN3 - Motor Direction Control
+PORTY, PIN4 - Motor Direction Control
+PORTZ, PIN7 - Motor Direction Control
+PORTZ, PIN8 - Motor Direction Control
 
 PORTZ, PIN6 - PWM out to control H Bridge
 PORTV, PIN5 | PIN6 - Digital Outs to In1 and In2

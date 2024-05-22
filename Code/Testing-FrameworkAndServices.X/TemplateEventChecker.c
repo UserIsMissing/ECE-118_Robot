@@ -27,7 +27,7 @@
  ******************************************************************************/
 
 #include "ES_Configure.h"
-#include "TemplateEventChecker.h"
+#include <TemplateEventChecker.h>
 #include "ES_Events.h"
 #include "serial.h"
 #include "AD.h"
@@ -115,6 +115,7 @@ uint8_t TemplateCheckBattery(void)
         // PostGenericService(thisEvent);
         // PostTemplateService(thisEvent);
         PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -137,7 +138,7 @@ uint8_t Read_TrackWireSensor(void)
     if (trackWireValue > TRACK_WIRE_VALUE)
     { // is track wire detected?
         // printf("Track Wire Detected: %d \r\n", trackWireValue);
-        printf("TRACKWIRE\r\n");
+        // printf("TRACKWIRE\r\n");
         curEvent = TRACKWIRE_DETECTED;
     }
     else
@@ -154,6 +155,7 @@ uint8_t Read_TrackWireSensor(void)
         // PostGenericService(thisEvent);
         // PostTemplateService(thisEvent);
         PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -213,6 +215,7 @@ uint8_t TapeSensors_ReadAll(void)
         // PostGenericService(thisEvent);
         // PostTemplateService(thisEvent);
         PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -274,6 +277,7 @@ uint8_t WallSensors_ReadAll(void)
         // PostGenericService(thisEvent);
         // PostTemplateService(thisEvent);
         PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif

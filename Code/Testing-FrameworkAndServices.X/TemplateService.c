@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 #include "IncludeHeaders.h"
+#include "TemplateFSM.h"
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -139,6 +140,7 @@ ES_Event RunTemplateService(ES_Event ThisEvent) {
 #ifndef SIMPLESERVICE_TEST        // keep this as is for test harness
                 // PostGenericService(ReturnEvent);
                 PostTemplateHSM(ReturnEvent);
+                // PostTemplateFSM(ReturnEvent);
 #else
                 PostTemplateService(ReturnEvent);
 #endif

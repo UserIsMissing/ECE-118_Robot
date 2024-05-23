@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/Testing-FrameworkAndServices.X.production.elf">                 
+  <executable name="dist/default/production/Robot-Main.production.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>126464</length>                 
-      <used>47656</used>                     
-      <free>78808</free>                     
+      <used>50200</used>                     
+      <free>76264</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
       <length>16384</length>                 
-      <used>3432</used>                     
-      <free>12952</free>                     
+      <used>3672</used>                     
+      <free>12712</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

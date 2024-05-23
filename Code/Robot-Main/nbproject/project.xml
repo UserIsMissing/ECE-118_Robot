@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Testing-FrameworkAndServices</name>
+            <name>Robot-Main</name>
             <creation-uuid>13b74091-9530-4031-96b6-09e8f768a28e</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>

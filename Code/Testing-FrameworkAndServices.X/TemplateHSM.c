@@ -49,9 +49,6 @@ typedef enum
     FirstState,
     Random,
     Snake,
-    RANDOMTEST,
-    TIMERTEST,
-    TEST_IRSENSOR,
     WallRide,
 } TemplateHSMState_t;
 
@@ -60,9 +57,6 @@ static const char *StateNames[] = {
     "FirstState",
     "Random",
     "Snake",
-    "RANDOMTEST",
-    "TIMERTEST",
-    "TEST_IRSENSOR",
     "WallRide",
 };
 
@@ -209,58 +203,18 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         break;
 
-    case TIMERTEST:
-        switch (ThisEvent.EventType)
-        {
-        case ES_TIMEOUT:
-            ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
-            printf("5 second timer up\r\n");
-            nextState = TIMERTEST;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-            break;
-        }
-        break;
-
-    case TEST_IRSENSOR:
-        // printf("Made it to TEST_IRSENSOR\r\n");
-        // printf("%d", ThisEvent.EventType);
-        if (ThisEvent.EventType == ES_TAPESENSORS)
-        {
-            // printf("HSM\r\n");
-            // printf("Tape Sensor Triggered\r\n");
-        }
-        // nextState = TEST_IRSENSOR;
-        // makeTransition = TRUE;
-        // ThisEvent.EventType = ES_NO_EVENT;
-        break;
-
-    case RANDOMTEST:
-        // Motors_Forward(MOTOR_MAXIMUM);
-        printf("Current event: %d\r\n", ThisEvent.EventType);
-        switch (ThisEvent.EventType)
-        {
-
-        case ES_TAPESENSORS:
-            printf("Tape Sensor Triggered\r\n");
-            break;
-
-        case ES_WALLSENSORS:
-            printf("Wall Sensor Triggered\r\n");
-            break;
-        }
-        break;
 
     case Random:
         // Motors_Forward(MOTOR_MAXIMUM);
-        if (ThisEvent.EventType == ES_WALLSENSORS)
+        if (ThisEvent.EventType == ES_WALLSENSORS)  // Found wall, Transition
         {
             Motors_Stop();
+            Tank_Left(700);
             nextState = WallRide;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_TAPESENSORS)
+        if (ThisEvent.EventType == ES_TAPESENSORS)  // Turning away from tape
         {
             ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             Tank_Left(MOTOR_MAXIMUM);
@@ -268,7 +222,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_TIMEOUT)
+        if (ThisEvent.EventType == ES_TIMEOUT)  // Turning away from tape TIMER
         {
             printf("\r\nES_TIMEOUT");
             if (ThisEvent.EventParam == TIMER_TURN)
@@ -277,31 +231,48 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             }
         }
         break;
+
     case WallRide:
         printf("\r\nEntered WallRide");
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RR_MASK))
+        {
+            Motors_Stop();
+            Motors_Forward(MOTOR_MAXIMUM);
+        }
+        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == TAPE_BOTH_FRONT_MASK))
+        {
+            Motors_Stop();
+            Tank_Left(700);
+            ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
 
+        }
+        if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
+        {
+            Motors_Stop();
+            nextState = Snake;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
         break;
+
+    case Snake:
+        break;
+
+    default: // all unhandled states fall into here
+        break;
+
+    } // end switch on Current State
+
+    if (makeTransition == TRUE)
+    { // making a state transition, send EXIT and ENTRY
+        // recursively call the current state with an exit event
+        RunTemplateHSM(EXIT_EVENT); // <- rename to your own Run function
+        CurrentState = nextState;
+        RunTemplateHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
-}
 
-case Snake:
-break;
-
-default: // all unhandled states fall into here
-break;
-
-} // end switch on Current State
-
-if (makeTransition == TRUE)
-{ // making a state transition, send EXIT and ENTRY
-    // recursively call the current state with an exit event
-    RunTemplateHSM(EXIT_EVENT); // <- rename to your own Run function
-    CurrentState = nextState;
-    RunTemplateHSM(ENTRY_EVENT); // <- rename to your own Run function
-}
-
-ES_Tail(); // trace call stack end
-return ThisEvent;
+    ES_Tail(); // trace call stack end
+    return ThisEvent;
 }
 
 /*******************************************************************************

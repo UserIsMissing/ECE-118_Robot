@@ -3,8 +3,8 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Robot-Main</name>
-            <creation-uuid>c75367f1-c702-4c26-bf1e-a0aaa45d208b</creation-uuid>
+            <name>Testing-FrameworkAndServices</name>
+            <creation-uuid>13b74091-9530-4031-96b6-09e8f768a28e</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
@@ -13,7 +13,11 @@
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>C:\Users\qinyu\OneDrive\Desktop\Github Projects\ECE-118_Robot\Code\Robot-Main.X</sourceRootElem>
+                <sourceRootElem>C:/Users/qinyu/OneDrive/Desktop/Github Projects/ECE-118_Robot/Code/H-Bridge-Testing.X</sourceRootElem>
+                <sourceRootElem>C:\Users\qinyu\Desktop\ECE-118_Robot\Code\H-Bridge-Testing.X</sourceRootElem>
+                <sourceRootElem>C:\Users\qinyu\OneDrive\Desktop\Github Projects\ECE-118_Robot\Code\Testing-Code.X</sourceRootElem>
+                <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../../0-ECE118/ECE118</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

@@ -82,13 +82,13 @@ void Motors_Forward(signed short int speed);
 
 void Motors_Backward(void);
 
-void Pivot_Left(signed short int speed, signed short int duration);
+void Pivot_Left(signed short int speed);
 
-void Pivot_Right(signed short int speed, signed short int duration);
+void Pivot_Right(signed short int speed);
 
-void Tank_Left(signed short int speed, signed short int duration);
+void Tank_Left(signed short int speed);
 
-void Tank_Right(signed short int speed, signed short int duration);
+void Tank_Right(signed short int speed);
 
 void Motors_Stop(void);
 

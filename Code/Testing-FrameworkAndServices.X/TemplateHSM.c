@@ -171,11 +171,12 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             // initial state
             // Initialize all sub-state machines
             InitTemplateSubHSM();
-            // ES_Timer_InitTimer(TEST_TIMER, TEST_TIMER_CLICKS);
+            // ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             // now put the machine into the actual initial state
 
             // INIT_ALL();
-            nextState = TEST_IRSENSOR;
+            Motors_Forward(MOTOR_MAXIMUM);
+            nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -210,7 +211,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         switch (ThisEvent.EventType)
         {
         case ES_TIMEOUT:
-            ES_Timer_InitTimer(TEST_TIMER, TEST_TIMER_CLICKS);
+            ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             printf("5 second timer up\r\n");
             nextState = TIMERTEST;
             makeTransition = TRUE;
@@ -249,21 +250,30 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case Random:
-        Motors_Forward(MOTOR_MAXIMUM);
+        // Motors_Forward(MOTOR_MAXIMUM);
         switch (ThisEvent.EventType)
         {
+        case ES_WALLSENSORS:
+            Motors_Stop();
+            // nextState = Random;
+            // makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
+            break;
+
         case ES_TAPESENSORS:
-            Tank_Left(MOTOR_MAXIMUM, 1000);
+            ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
+            Tank_Left(MOTOR_MAXIMUM);
             nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
             break;
 
-        case ES_WALLSENSORS:
-            Motors_Stop();
-            nextState = Random;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+        case ES_TIMEOUT:
+            printf("ES_TIMEOUT");
+            if (ThisEvent.EventParam == TIMER_TURN)
+            {
+                Motors_Forward(MOTOR_MAXIMUM);
+            }
             break;
         }
         break;
@@ -303,19 +313,23 @@ void Motors_Backward(void)
     Robot_LeftWheelSpeed(-1000);
 }
 
-void Pivot_Left(signed short int speed, signed short int duration)
+void Tank_Left(signed short int speed)
+{
+    Robot_LeftWheelSpeed(-speed);
+    Robot_RightWheelSpeed(speed);
+}
+
+void Tank_Right(signed short int speed)
+{
+    Robot_LeftWheelSpeed(speed);
+    Robot_RightWheelSpeed(-speed);
+}
+
+void Pivot_Left(signed short int speed)
 {
 }
 
-void Pivot_Right(signed short int speed, signed short int duration)
-{
-}
-
-void Tank_Left(signed short int speed, signed short int duration)
-{
-}
-
-void Tank_Right(signed short int speed, signed short int duration)
+void Pivot_Right(signed short int speed)
 {
 }
 

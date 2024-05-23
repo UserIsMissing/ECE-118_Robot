@@ -168,17 +168,17 @@ uint8_t Read_TrackWireSensor(void)
  ******************************************************************************/
 uint8_t TapeSensor_FL(void)
 {
-    return !((IO_PortsReadPort(PORTV) & PIN3) >> 3); // read the Front Left tape sensor
+    return ((IO_PortsReadPort(PORTV) & PIN3) >> 3); // read the Front Left tape sensor
 }
 
 uint8_t TapeSensor_FR(void)
 {
-    return !((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
+    return ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
 }
 
 uint8_t TapeSensor_RL(void)
 {
-    return !((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
+    return ((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
 }
 
 uint8_t TapeSensors_AllBits(void)

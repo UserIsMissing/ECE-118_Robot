@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Testing-FrameworkAndServices.X
+PROJECTNAME=Robot-Main.X
 
 # Active Configuration
 DEFAULTCONF=default

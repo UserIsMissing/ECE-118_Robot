@@ -239,14 +239,14 @@ uint8_t WallSensor_FR(void)
     return !((IO_PortsReadPort(PORTW) & PIN5) >> 5); // read the Front Right tape sensor
 }
 
-uint8_t WallSensor_RL(void)
+uint8_t WallSensor_RR(void)
 {
-    return !((IO_PortsReadPort(PORTW) & PIN7) >> 7); // read the Rear Left tape sensor
+    return !((IO_PortsReadPort(PORTW) & PIN7) >> 7); // read the Rear Right tape sensor
 }
 
 uint8_t WallSensors_AllBits(void)
 {
-    return (WallSensor_FL() | (WallSensor_FR() << 1) | (WallSensor_RL() << 2));
+    return (WallSensor_FL() | (WallSensor_FR() << 1) | (WallSensor_RR() << 2));
 }
 
 uint8_t WallSensors_ReadAll(void)

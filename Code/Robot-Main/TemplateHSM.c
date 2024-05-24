@@ -210,7 +210,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_WALLSENSORS) // Found wall, Transition
         {
             Motors_Stop();
-            Tank_Right(700);
+            Tank_Left(700);
             nextState = WallRide;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -233,15 +233,15 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         break;
 
-    case WallRide:  // Wall ride untill you find tape, then 180 in PT 2 
-    // see sensor, turn, timer up, forward, reppeat
+    case WallRide: // Wall ride untill you find tape, then 180 in PT 2
+                   // see sensor, turn, timer up, forward, reppeat
         printf("\r\nEntered WallRide");
-        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RR_MASK))  // Spin on wall untill you line up a little
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RR_MASK)) // Spin on wall untill you line up a little
         {
             Motors_Stop();
             Tank_Left(700);
         }
-        if (ThisEvent.EventType == ES_NO_EVENT) 
+        if (ThisEvent.EventType == ES_NO_EVENT)
         {
             Motors_Forward(700);
         }
@@ -250,21 +250,31 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             Motors_Stop();
             ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
             Tank_Left(700);
+            nextState = WallRidePT2;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
         }
+        // if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
+        // {
+            // Motors_Stop();
+            // nextState = WallRidePT2;
+            // makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
+        // }
+        break;
+
+    case WallRidePT2: // 180 on the tape to setup for snake
         if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
         {
             Motors_Stop();
             nextState = Snake;
-            makeTransition = TRUE;
+            makeTransition = True;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case WallRidePT2:   // 180 on the tape to setup for snake
-        
-        break;
-
     case Snake:
+
         break;
 
     default: // all unhandled states fall into here

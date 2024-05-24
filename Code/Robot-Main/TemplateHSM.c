@@ -236,7 +236,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case WallRide: // Wall ride untill you find tape, then 180 in PT 2
                    // see sensor, turn, timer up, forward, reppeat
         printf("\r\nEntered WallRide");
-        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RR_MASK)) // Spin on wall untill you line up a little
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == (WALL_RR_MASK || WALL_FR_MASK || WALL_FL_MASK))) // Spin on wall untill you line up a little
         {
             Motors_Stop();
             Tank_Left(700);

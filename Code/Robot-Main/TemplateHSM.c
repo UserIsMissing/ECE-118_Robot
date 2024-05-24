@@ -209,14 +209,24 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         // Motors_Forward(MOTOR_MAXIMUM);
         if (ThisEvent.EventType == ES_WALLSENSORS) // Found wall, Transition
         {
-            Motors_Stop();
-            Tank_Left(700);
+            printf("\r\nRandom: Wall Sensor");
+            // Motors_Stop();
+            // Reverse_Pivot_Right(850);
+
+            // Robot_LeftWheelSpeed(-850);
+            // Robot_RightWheelSpeed(1);
+
+            // Tank_Left(850);
+            Robot_LeftWheelSpeed(850);
+            Robot_RightWheelSpeed(-850);
+            
             nextState = WallRide;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TAPESENSORS) // Turning away from tape
         {
+            printf("\r\nRandom: Tape Sensor");
             ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             Tank_Right(MOTOR_MAXIMUM);
             nextState = Random;
@@ -236,17 +246,20 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case WallRide: // Wall ride untill you find tape, then 180 in PT 2
                    // see sensor, turn, timer up, forward, reppeat
         printf("\r\nEntered WallRide");
-        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == (WALL_RR_MASK || WALL_FR_MASK || WALL_FL_MASK))) // Spin on wall untill you line up a little
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == (WALL_RR_MASK))) // Spin on wall untill you line up a little
         {
-            Motors_Stop();
+            printf("\r\nWallRide: Wall Sensor");
+            // Motors_Stop();
             Tank_Left(700);
         }
         if (ThisEvent.EventType == ES_NO_EVENT)
         {
+            printf("\r\nWallRide: ES_NO_EVENT");
             Motors_Forward(700);
         }
         if (ThisEvent.EventType == ES_TAPESENSORS)
         {
+            printf("\r\nWallRide: Tape Sensor");
             Motors_Stop();
             ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
             Tank_Left(700);
@@ -266,9 +279,10 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case WallRidePT2: // 180 on the tape to setup for snake
         if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
         {
+            printf("\r\nWallRide2");
             Motors_Stop();
             nextState = Snake;
-            makeTransition = True;
+            makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
@@ -323,10 +337,26 @@ void Tank_Right(signed short int speed)
 
 void Pivot_Left(signed short int speed)
 {
+    Robot_LeftWheelSpeed(0);
+    Robot_RightWheelSpeed(speed);
 }
 
 void Pivot_Right(signed short int speed)
 {
+    Robot_LeftWheelSpeed(speed);
+    Robot_RightWheelSpeed(0);
+}
+
+void Reverse_Pivot_Left(signed short int speed)
+{
+    Robot_LeftWheelSpeed(0);
+    Robot_RightWheelSpeed(-speed);
+}
+
+void Reverse_Pivot_Right(signed short int speed)
+{
+    Robot_LeftWheelSpeed(-speed);
+    Robot_RightWheelSpeed(0);
 }
 
 void Motors_Stop(void)

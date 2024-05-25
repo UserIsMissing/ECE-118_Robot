@@ -93,6 +93,11 @@ void Pivot_Left(signed short int speed);
 
 void Pivot_Right(signed short int speed);
 
+void Reverse_Pivot_Left(signed short int speed);
+
+void Reverse_Pivot_Right(signed short int speed);
+
+
 void Tank_Left(signed short int speed);
 
 void Tank_Right(signed short int speed);

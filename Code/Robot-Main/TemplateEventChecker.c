@@ -132,7 +132,7 @@ uint8_t Read_TrackWireSensor(void)
     ES_EventTyp_t curEvent;
     ES_Event thisEvent;
     uint8_t returnVal = FALSE;
-    uint16_t trackWireValue = AD_ReadADPin(AD_PORTV8); // read the track wire sensor
+    uint16_t trackWireValue = AD_ReadADPin(AD_PORTV4); // read the track wire sensor
 
     // printf("Track Wire Detected: %d \r\n", trackWireValue);
     if (trackWireValue > TRACK_WIRE_VALUE)
@@ -244,9 +244,14 @@ uint8_t WallSensor_RR(void)
     return !((IO_PortsReadPort(PORTW) & PIN7) >> 7); // read the Rear Right wall sensor
 }
 
+uint8_t WallSensor_RL(void)
+{
+    return !((IO_PortsReadPort(PORTW) & PIN8) >> 8); // read the Rear Right wall sensor
+}
+
 uint8_t WallSensors_AllBits(void)
 {
-    return (WallSensor_FL() | (WallSensor_FR() << 1) | (WallSensor_RR() << 2));
+    return (WallSensor_FL() | (WallSensor_FR() << 1) | (WallSensor_RR() << 2) | (WallSensor_RL() << 3));
 }
 
 uint8_t WallSensors_ReadAll(void)
@@ -299,7 +304,7 @@ uint8_t WallSensor_RL_Analog(void)
 
     uint16_t Wall_Left_Analog = AD_ReadADPin(AD_PORTV8);
 
-    if ((Wall_Left_Analog > WALL_LEFT_TOO_CLOSE) || (Wall_Left_Analog < WALL_LEFT_TOO_FAR))
+    if ((Wall_Left_Analog < WALL_LEFT_TOO_CLOSE) /* || (Wall_Left_Analog > WALL_LEFT_TOO_FAR) */)
     {
         // printf("Wall Sensor %d \r\n", Wall_Left_Analog);
         curEvent = ES_WALL_LEFT_ANALOG;

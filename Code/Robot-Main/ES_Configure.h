@@ -126,8 +126,13 @@ static const char *EventNames[] = {
 #define TIMER_TURN 1
 #define TIMER_TURN_CLICKS 500
 
+// TIMER_180_CLICKS 3100 is EXACTLY a 180 pivot in reverse. slightly more but thats a good thing
 #define TIMER_180 2
-#define TIMER_180_CLICKS 1000
+#define TIMER_180_CLICKS 3100
+#define TIMER_180_2_CLICKS 3200
+#define TIMER_90_CLICKS 800
+
+#define TIMER_RAM_GATE_CLICKS 10000
 
 
 /****************************************************************************/

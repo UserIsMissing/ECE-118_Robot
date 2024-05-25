@@ -57,14 +57,15 @@ This file is used to include all the necessary header files for the project.
 #define TAPE_BOTH_FRONT_MASK 0b110
 #define TAPE_BOTH_LEFT_MASK 0b101
 
-#define WALL_FL_MASK 0b001
-#define WALL_FR_MASK 0b010
-#define WALL_RR_MASK 0b100
+#define WALL_FL_MASK 0b0001
+#define WALL_FR_MASK 0b0010
+#define WALL_RR_MASK 0b0100
+#define Wall_RL_MASK 0b1000
 #define WALL_BOTH_FRONT_MASK 0b110
 #define WALL_BOTH_LEFT_MASK 0b101
 
-#define WALL_LEFT_TOO_CLOSE 700     // For snake, when bot is too close to the wall, it will turn right slightly (into the wall)
-#define WALL_LEFT_TOO_FAR 500       // For snake, when bot is too far from the wall, it will turn left slightly  (away from the wall)
+#define WALL_LEFT_TOO_CLOSE 40     // For snake, when bot is too close to the wall, it will turn right slightly (into the wall)
+#define WALL_LEFT_TOO_FAR 1000       // For snake, when bot is too far from the wall, it will turn left slightly  (away from the wall)
 
 /* ------------------   MOTOR DEFINES   ------------------ */
 #define MOTOR_MINIMUM -1000
@@ -97,7 +98,8 @@ PORTV, PIN7 - Rear Left Tape Sensor
 PORTW, PIN3 - Front Left Wall Sensor
 PORTW, PIN5 - Front Right Wall Sensor
 PORTW, PIN7 - Rear Right Wall Sensor (Really more like Right Right Wall Sensor)
-AD_PORTV8   - Rear Left Wall Sensor  (Really more like Left Left Wall Sensor)
+PORTW, PIN8 - Rear Right Wall Sensor (Really more like Right Right Wall Sensor)
+// AD_PORTV8   - Rear Left Wall Sensor  (Really more like Left Left Wall Sensor)
 
 
 PORTY, PIN3 - Motor Direction Control

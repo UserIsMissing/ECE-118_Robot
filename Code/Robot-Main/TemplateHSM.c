@@ -213,12 +213,12 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             // Motors_Stop();
             // Reverse_Pivot_Right(850);
 
-            // Robot_LeftWheelSpeed(-850);
-            // Robot_RightWheelSpeed(1);
+            Robot_LeftWheelSpeed(-850);
+            Robot_RightWheelSpeed(-1);
 
             // Tank_Left(850);
-            Robot_LeftWheelSpeed(850);
-            Robot_RightWheelSpeed(-850);
+            // Robot_LeftWheelSpeed(850);
+            // Robot_RightWheelSpeed(-850);
             
             nextState = WallRide;
             makeTransition = TRUE;

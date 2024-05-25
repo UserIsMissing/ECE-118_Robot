@@ -48,18 +48,24 @@ typedef enum
     InitPState,
     FirstState,
     Random,
-    Snake,
     WallRide,
     WallRidePT2,
+    Snake1,         // Wall Follow
+    Snake2,         // Snake pass #2 (Travels Left)
+    Snake3,         // Snake pass #3 (Travels Right before reverse along tape)
+    Reverse,        // Reverse along tape into the gate
 } TemplateHSMState_t;
 
 static const char *StateNames[] = {
     "InitPState",
     "FirstState",
     "Random",
-    "Snake",
     "WallRide",
     "WallRidePT2",
+    "Snake1",
+    "Snake2",
+    "Snake3",
+    "Reverse",
 };
 
 /*******************************************************************************
@@ -213,13 +219,14 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             // Motors_Stop();
             // Reverse_Pivot_Right(850);
 
+            // Reverse_Pivot_Right(850);
             Robot_LeftWheelSpeed(-850);
             Robot_RightWheelSpeed(-1);
 
             // Tank_Left(850);
             // Robot_LeftWheelSpeed(850);
             // Robot_RightWheelSpeed(-850);
-            
+
             nextState = WallRide;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -269,25 +276,43 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         // if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
         // {
-            // Motors_Stop();
-            // nextState = WallRidePT2;
-            // makeTransition = TRUE;
-            // ThisEvent.EventType = ES_NO_EVENT;
+        // Motors_Stop();
+        // nextState = WallRidePT2;
+        // makeTransition = TRUE;
+        // ThisEvent.EventType = ES_NO_EVENT;
         // }
         break;
 
     case WallRidePT2: // 180 on the tape to setup for snake
-        if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
+        // if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
+        if (ThisEvent.EventType == ES_WALL_LEFT_ANALOG)
         {
             printf("\r\nWallRide2");
             Motors_Stop();
-            nextState = Snake;
+            nextState = Snake1;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case Snake:
+    case Snake1:
+        if ((ThisEvent.EventType == ES_WALL_LEFT_ANALOG) && (ThisEvent.EventParam >= WALL_LEFT_TOO_CLOSE))
+        {
+            Robot_LeftWheelSpeed(950);
+            Robot_RightWheelSpeed(1000);
+        }
+        if ((ThisEvent.EventType == ES_WALL_LEFT_ANALOG) && (ThisEvent.EventParam <= WALL_LEFT_TOO_FAR))
+        {
+            Robot_LeftWheelSpeed(1000);
+            Robot_RightWheelSpeed(950);
+        }
+        if (ThisEvent.EventType == ES_TAPESENSORS)
+        {
+            Motors_Stop();
+            nextState = Snake2;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
 
         break;
 
@@ -309,7 +334,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 }
 
 /*******************************************************************************
- * PRIVATE FUNCTIONS                                                           *
+ * PRIVATE FUNCTIONS FOR MOTOR MOVEMENT                                        *
  ******************************************************************************/
 void Motors_Forward(signed short int speed)
 {
@@ -349,14 +374,14 @@ void Pivot_Right(signed short int speed)
 
 void Reverse_Pivot_Left(signed short int speed)
 {
-    Robot_LeftWheelSpeed(0);
+    Robot_LeftWheelSpeed(-1);
     Robot_RightWheelSpeed(-speed);
 }
 
 void Reverse_Pivot_Right(signed short int speed)
 {
     Robot_LeftWheelSpeed(-speed);
-    Robot_RightWheelSpeed(0);
+    Robot_RightWheelSpeed(-1);
 }
 
 void Motors_Stop(void)

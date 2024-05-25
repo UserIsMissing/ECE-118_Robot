@@ -54,6 +54,7 @@ typedef enum {
     ES_TAPESENSORS,  // Tape Sensor Event
 
     ES_WALLSENSORS,  // Wall Sensor Event
+    ES_WALL_LEFT_ANALOG,
 } ES_EventTyp_t;
 
 static const char *EventNames[] = {
@@ -77,6 +78,7 @@ static const char *EventNames[] = {
     "ES_TAPESENSORS", // Tape Sensor Event
 
     "ES_WALLSENSORS", // Wall Sensor Event
+    "ES_WALL_LEFT_ANALOG",
 };
 
 

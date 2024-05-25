@@ -63,6 +63,9 @@ This file is used to include all the necessary header files for the project.
 #define WALL_BOTH_FRONT_MASK 0b110
 #define WALL_BOTH_LEFT_MASK 0b101
 
+#define WALL_LEFT_TOO_CLOSE 700     // For snake, when bot is too close to the wall, it will turn right slightly (into the wall)
+#define WALL_LEFT_TOO_FAR 500       // For snake, when bot is too far from the wall, it will turn left slightly  (away from the wall)
+
 /* ------------------   MOTOR DEFINES   ------------------ */
 #define MOTOR_MINIMUM -1000
 #define MOTOR_MAXIMUM 1000 
@@ -85,7 +88,7 @@ This file is used to include all the necessary header files for the project.
 
 
 /* ------------------   LIST OF USED PINS   ------------------ 
-AD_PORTV8 - Trackwire Sensor
+AD_PORTV4 - Trackwire Sensor
 
 PORTV, PIN3 - Front Left Tape Sensor
 PORTV, PIN5 - Front Right Tape Sensor
@@ -93,7 +96,9 @@ PORTV, PIN7 - Rear Left Tape Sensor
 
 PORTW, PIN3 - Front Left Wall Sensor
 PORTW, PIN5 - Front Right Wall Sensor
-PORTW, PIN7 - Rear Left Wall Sensor
+PORTW, PIN7 - Rear Right Wall Sensor (Really more like Right Right Wall Sensor)
+AD_PORTV8   - Rear Left Wall Sensor  (Really more like Left Left Wall Sensor)
+
 
 PORTY, PIN3 - Motor Direction Control
 PORTY, PIN4 - Motor Direction Control

@@ -231,17 +231,17 @@ uint8_t TapeSensors_ReadAll(void)
  ******************************************************************************/
 uint8_t WallSensor_FL(void)
 {
-    return !((IO_PortsReadPort(PORTW) & PIN3) >> 3); // read the Front Left tape sensor
+    return !((IO_PortsReadPort(PORTW) & PIN3) >> 3); // read the Front Left wall sensor
 }
 
 uint8_t WallSensor_FR(void)
 {
-    return !((IO_PortsReadPort(PORTW) & PIN5) >> 5); // read the Front Right tape sensor
+    return !((IO_PortsReadPort(PORTW) & PIN5) >> 5); // read the Front Right wall sensor
 }
 
 uint8_t WallSensor_RR(void)
 {
-    return !((IO_PortsReadPort(PORTW) & PIN7) >> 7); // read the Rear Right tape sensor
+    return !((IO_PortsReadPort(PORTW) & PIN7) >> 7); // read the Rear Right wall sensor
 }
 
 uint8_t WallSensors_AllBits(void)
@@ -272,6 +272,47 @@ uint8_t WallSensors_ReadAll(void)
     { // check for change from last time
         thisEvent.EventType = curEvent;
         thisEvent.EventParam = WallSensors;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        // PostGenericService(thisEvent);
+        // PostTemplateService(thisEvent);
+        PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+
+/*******************************************************************************
+ * ANALOG WALL SENSOR                                                          *
+ ******************************************************************************/
+// Left side wall sensor is analog so i can maintain a certain distance from it
+uint8_t WallSensor_RL_Analog(void)
+{
+    static ES_EventTyp_t lastEvent = ES_WALL_LEFT_ANALOG;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    uint16_t Wall_Left_Analog = AD_ReadADPin(AD_PORTV8);
+
+    if ((Wall_Left_Analog > WALL_LEFT_TOO_CLOSE) || (Wall_Left_Analog < WALL_LEFT_TOO_FAR))
+    {
+        // printf("Wall Sensor %d \r\n", Wall_Left_Analog);
+        curEvent = ES_WALL_LEFT_ANALOG;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = Wall_Left_Analog;
         returnVal = TRUE;
         lastEvent = curEvent; // update history
 #ifndef EVENTCHECKER_TEST     // keep this as is for test harness

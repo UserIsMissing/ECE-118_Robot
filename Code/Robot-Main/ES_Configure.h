@@ -51,6 +51,8 @@ typedef enum {
     TRACKWIRE_DETECTED,
     TRACKWIRE_NOT_DETECTED,
 
+    ES_BUMPERS,     // Bumper Event
+
     ES_TAPESENSORS,  // Tape Sensor Event
 
     ES_WALLSENSORS,  // Wall Sensor Event
@@ -75,9 +77,11 @@ static const char *EventNames[] = {
     "TRACKWIRE_DETECTED",
     "TRACKWIRE_NOT_DETECTED",
 
-    "ES_TAPESENSORS", // Tape Sensor Event
+    "ES_BUMPERS",       // Bumper Event
 
-    "ES_WALLSENSORS", // Wall Sensor Event
+    "ES_TAPESENSORS",   // Tape Sensor Event
+
+    "ES_WALLSENSORS",   // Wall Sensor Event
     "ES_WALL_LEFT_ANALOG",
 };
 

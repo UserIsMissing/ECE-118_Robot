@@ -124,6 +124,50 @@ uint8_t TemplateCheckBattery(void)
 }
 
 /*******************************************************************************
+ * BUMPERS                                                                     *
+ ******************************************************************************/
+uint8_t Bumper_Front(void)
+{
+    return ((IO_PortsReadPort(PORTY) & PIN3) >> 3); // read the Front bumper
+}
+
+uint8_t Read_Bumpers(void)
+{
+    static ES_EventTyp_t lastEvent = ES_BUMPERS;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+    uint16_t Bumpers = Bumper_Front();
+
+    if (Bumpers != 0)
+    {
+        // printf("Bumper %d \r\n", Bumpers);
+        curEvent = ES_BUMPERS;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = Bumpers;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        // PostGenericService(thisEvent);
+        // PostTemplateService(thisEvent);
+        PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);    
+}
+
+/*******************************************************************************
  * TRACK WIRE SENSOR                                                           *
  ******************************************************************************/
 uint8_t Read_TrackWireSensor(void)

@@ -87,6 +87,8 @@ This file is used to include all the necessary header files for the project.
 /* ------------------   LIST OF USED PINS   ------------------ 
 AD_PORTV4 - Trackwire Sensor
 
+PORTZ, PIN3 - Front Bumper Switch
+
 PORTV, PIN3 - Front Left Tape Sensor
 PORTV, PIN5 - Front Right Tape Sensor
 PORTV, PIN7 - Rear Left Tape Sensor

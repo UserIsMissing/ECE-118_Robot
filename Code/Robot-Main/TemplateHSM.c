@@ -58,6 +58,7 @@ typedef enum
     Reverse, // Reverse along tape into the gate
     Reverse2,// 90 degree turn for Reverse state
     Testing180,
+    BUMPERTEST,
 } TemplateHSMState_t;
 
 static const char *StateNames[] = {
@@ -74,6 +75,7 @@ static const char *StateNames[] = {
     "Reverse",
     "Reverse2",
     "Testing180",
+    "BUMPERTEST",
 };
 
 /*******************************************************************************
@@ -188,7 +190,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
             // INIT_ALL();
             Motors_Forward(MOTOR_MAXIMUM);
-            nextState = Random;
+            nextState = BUMPERTEST;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -223,6 +225,13 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         case ES_NO_EVENT:
         default:
             break;
+        }
+        break;
+
+    case BUMPERTEST:
+        if (ThisEvent.EventType == ES_BUMPER)
+        {
+            printf("Bumper Triggered\r\n");
         }
         break;
 

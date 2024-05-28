@@ -336,7 +336,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
         if (ThisEvent.EventType == ES_TAPESENSORS)
         {
-            ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
+            // ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
             Reverse_Pivot_Right(800);
             nextState = Snake2;
             makeTransition = TRUE;
@@ -345,7 +345,15 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case Snake2: // Path #2, going left to tape
-        if (ThisEvent.EventType == ES_TIMEOUT)
+        // FIRST 180 to start gapped path. Check back left sensor
+        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+        {
+            Motors_Stop();
+            Robot_RightWheelSpeed(-700);
+        }
+        break;
+        // Hit back right sensor and then start the 2nd snake path. Moving left along the wall (with a gap)
+        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 8))
         {
             Motors_Stop();
             Motors_Forward(MOTOR_MAXIMUM);
@@ -358,7 +366,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case Snake25:
         if (ThisEvent.EventType == ES_TAPESENSORS)
         {
-            ES_Timer_InitTimer(TIMER_180, TIMER_180_2_CLICKS);
+            // ES_Timer_InitTimer(TIMER_180, TIMER_180_2_CLICKS);
             Reverse_Pivot_Left(800);
             nextState = Snake3;
             makeTransition = TRUE;
@@ -367,7 +375,15 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case Snake3: // Path #3, going right to tape. Before reverse into wall
-        if (ThisEvent.EventType == ES_TIMEOUT)
+        // SECOND 180. Check back right sensor
+        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+        {
+            Motors_Stop();
+            Robot_LeftWheelSpeed(-700);
+        }
+        break;
+        // Hit back Left sensor and then start the 3rd snake path.
+        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 8))
         {
             Motors_Stop();
             Motors_Forward(MOTOR_MAXIMUM);
@@ -376,6 +392,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
+        
 
     case Snake35:
         if (ThisEvent.EventType == ES_TAPESENSORS)

@@ -46,6 +46,9 @@ This file is used to include all the necessary header files for the project.
 /* ------------------   EVENTS DEFINES   ------------------ */
 #define TRACK_WIRE_VALUE 900
 
+#define BUMP_FL_MASK 0b0001
+#define BUMP_FR_MASK 0b0010
+
 #define TAPE_FL_MASK 0b0001
 #define TAPE_FR_MASK 0b0010
 #define TAPE_RL_MASK 0b0100
@@ -87,7 +90,8 @@ This file is used to include all the necessary header files for the project.
 /* ------------------   LIST OF USED PINS   ------------------ 
 AD_PORTV4 - Trackwire Sensor
 
-PORTZ, PIN3 - Front Bumper Switch
+PORTZ, PIN3 - Front Left Bumper Switch
+PORTZ, PIN4 - Front Right Bumper Switch
 
 PORTV, PIN3 - Front Left Tape Sensor
 PORTV, PIN5 - Front Right Tape Sensor

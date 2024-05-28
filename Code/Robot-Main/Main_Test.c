@@ -36,7 +36,8 @@ int main(int argc, char **argv)
     LED_AddBanks(0x7);
 
     /* ------------------ SENSORS ------------------ */
-    IO_PortsSetPortInputs(PORTZ, PIN3); // Front Bumper
+    IO_PortsSetPortInputs(PORTZ, PIN3); // Front Left Bumper
+    IO_PortsSetPortInputs(PORTZ, PIN4); // Front Right Bumper
 
     IO_PortsSetPortInputs(PORTV, PIN3); // Front Left IR Tape Sensor
     IO_PortsSetPortInputs(PORTV, PIN5); // Front Right IR Tape Sensor

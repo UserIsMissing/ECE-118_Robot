@@ -57,7 +57,6 @@ typedef enum
     Snake35, // Snake 3.5 is used for the 180 reverse
     Reverse, // Reverse along tape into the gate
     Reverse2,// 90 degree turn for Reverse state
-    Testing180,
     BUMPERTEST,
 } TemplateHSMState_t;
 
@@ -74,7 +73,6 @@ static const char *StateNames[] = {
     "Snake35",
     "Reverse",
     "Reverse2",
-    "Testing180",
     "BUMPERTEST",
 };
 
@@ -196,13 +194,6 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         break;
 
-    case Testing180:
-        if (ThisEvent.EventType == ES_TIMEOUT)
-        {
-            Motors_Stop();
-        }
-        break;
-
     case FirstState: // in the first state, replace this with correct names
         // run sub-state machine for this state
         // NOTE: the SubState Machine runs and responds to events before anything in the this
@@ -231,7 +222,14 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case BUMPERTEST:
         if (ThisEvent.EventType == ES_BUMPER)
         {
-            printf("Bumper Triggered\r\n");
+            if (ThisEvent.EventParam == 1)
+            {
+                printf("\r\nBumper Front Left");
+            }
+            if (ThisEvent.EventParam == 2)
+            {
+                printf("\r\nBumper Front Right");
+            }
         }
         break;
 

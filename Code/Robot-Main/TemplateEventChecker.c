@@ -126,9 +126,17 @@ uint8_t TemplateCheckBattery(void)
 /*******************************************************************************
  * BUMPERS                                                                     *
  ******************************************************************************/
-uint8_t Bumper_Front(void)
+uint8_t Bumper_FL(void)
 {
     return ((IO_PortsReadPort(PORTY) & PIN3) >> 3); // read the Front bumper
+}
+uint8_t Bumper_FR(void)
+{
+    return ((IO_PortsReadPort(PORTY) & PIN4) >> 4); // read the Front bumper
+}
+uint8_t Bumper_AllBits(void)
+{
+    return (Bumper_FL() | (Bumper_FR() << 1));
 }
 
 uint8_t Read_Bumpers(void)
@@ -137,9 +145,9 @@ uint8_t Read_Bumpers(void)
     ES_EventTyp_t curEvent;
     ES_Event thisEvent;
     uint8_t returnVal = FALSE;
-    uint16_t Bumpers = Bumper_Front();
+    uint16_t Bumpers = Bumper_AllBits();
 
-    if (Bumpers != 0)
+    if (Bumpers == BUMP_FL_MASK || Bumpers == BUMP_FR_MASK)
     {
         // printf("Bumper %d \r\n", Bumpers);
         curEvent = ES_BUMPERS;

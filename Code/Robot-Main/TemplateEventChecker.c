@@ -181,9 +181,14 @@ uint8_t TapeSensor_RL(void)
     return ((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
 }
 
+uint8_t TapeSensor_RR(void)
+{
+    return ((IO_PortsReadPort(PORTV) & PIN9) >> 9); // read the Rear Right tape sensor
+}
+
 uint8_t TapeSensors_AllBits(void)
 {
-    return (TapeSensor_FL() | (TapeSensor_FR() << 1) | (TapeSensor_RL() << 2));
+    return (TapeSensor_FL() | (TapeSensor_FR() << 1) | (TapeSensor_RL() << 2) | TapeSensor_RR() << 3);
 }
 
 uint8_t TapeSensors_ReadAll(void)

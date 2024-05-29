@@ -5,8 +5,9 @@
         <group>
             <file>file:/C:/Users/james/OneDrive/Documents/ECE-118_Robot/Code/Robot-Main/TemplateHSM.c</file>
             <file>file:/C:/Users/james/OneDrive/Documents/ECE-118_Robot/Code/Robot-Main/ES_Configure.h</file>
-            <file>file:/C:/Users/james/OneDrive/Documents/ECE-118_Robot/Code/Robot-Main/ES_Timers.c</file>
             <file>file:/C:/Users/james/OneDrive/Documents/ECE-118_Robot/Code/Robot-Main/IncludeHeaders.h</file>
+            <file>file:/C:/Users/james/OneDrive/Documents/ECE-118_Robot/Code/Robot-Main/nbproject/Makefile-impl.mk</file>
+            <file>file:/C:/Users/james/OneDrive/Documents/ECE-118_Robot/Code/Robot-Main/TemplateEventChecker.c</file>
         </group>
     </open-files>
 </project-private>

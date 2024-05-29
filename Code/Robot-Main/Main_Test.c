@@ -16,7 +16,7 @@
 #include <IncludeHeaders.h>
 
 // #define MOTORTEST
-// #define IRTEST
+// #define IRTEST 
 // #define BEACONTEST
 // #define IOTEST
 // #define TRACKWIRETEST
@@ -42,7 +42,7 @@
     IO_PortsSetPortInputs(PORTV, PIN3); // Front Left IR Tape Sensor
     IO_PortsSetPortInputs(PORTV, PIN5); // Front Right IR Tape Sensor
     IO_PortsSetPortInputs(PORTV, PIN7); // Rear Left IR Tape Sensor
-    IO_PortsSetPortInputs(PORTV, PIN9); // Rear Right IR Tape Sensor
+    IO_PortsSetPortInputs(PORTV, PIN8); // Rear Right IR Tape Sensor
 
     IO_PortsSetPortInputs(PORTW, PIN3); // Front Left Wall Sensor
     IO_PortsSetPortInputs(PORTW, PIN5); // Front Right Wall Sensor
@@ -94,7 +94,25 @@ int main(int argc, char **argv)
 
     while (1)
     {
-        printf("\r\nTape Sensor: %d", AD_ReadADPin(AD_PORTV8));
+        if ((IO_PortsReadPort(PORTV) & PIN3) >> 3)
+        {
+        printf("\r\nTape Sensor: 3");
+        }
+
+        if ((IO_PortsReadPort(PORTV) & PIN5) >> 5)
+        {
+        printf("\r\nTape Sensor: 5");
+        }
+
+        if ((IO_PortsReadPort(PORTV) & PIN7) >> 7)
+        {
+        printf("\r\nTape Sensor: 7");
+        }
+
+        if ((IO_PortsReadPort(PORTV) & PIN8) >> 8)
+        {
+        printf("\r\nTape Sensor: 8");
+        }
     }
 
 #endif

@@ -251,11 +251,12 @@ uint8_t TapeSensors_ReadAll(void)
     uint8_t returnVal = FALSE;
 
     uint16_t TapeSensors = TapeSensors_AllBits();
+    //printf("\r\nmask:%d",TapeSensors);
 
     // if (TapeSensors != 0)
     if ((TapeSensors == TAPE_FL_MASK) || (TapeSensors == TAPE_FR_MASK) || (TapeSensors == TAPE_RL_MASK) || (TapeSensors == TAPE_RR_MASK) || (TapeSensors == TAPE_BOTH_FRONT_MASK))
     {
-        // printf("\r\nEVENT!!! Tape Sensor %d", TapeSensors);
+        //printf("\r\nEVENT!!! Tape Sensor %d", TapeSensors);
         curEvent = ES_TAPESENSORS;
     }
     else

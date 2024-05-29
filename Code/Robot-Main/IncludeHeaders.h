@@ -60,8 +60,8 @@ This file is used to include all the necessary header files for the project.
 #define WALL_FR_MASK 0b0010
 #define WALL_RR_MASK 0b0100
 #define Wall_RL_MASK 0b1000
-#define WALL_BOTH_FRONT_MASK 0b110
-#define WALL_BOTH_LEFT_MASK 0b101
+#define WALL_BOTH_FRONT_MASK 0b0110
+#define WALL_BOTH_LEFT_MASK 0b0101
 
 #define WALL_LEFT_TOO_CLOSE 40     // For snake, when bot is too close to the wall, it will turn right slightly (into the wall)
 #define WALL_LEFT_TOO_FAR 1000       // For snake, when bot is too far from the wall, it will turn left slightly  (away from the wall)

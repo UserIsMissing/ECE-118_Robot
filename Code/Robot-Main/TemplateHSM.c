@@ -83,21 +83,6 @@ static const char *StateNames[] = {
    relevant to the behavior of this state machine
    Example: char RunAway(uint_8 seconds);*/
 
-void INIT_ALL(void)
-{
-    // BOARD_Init();
-    // SERIAL_Init();
-    // AD_Init();
-    // PWM_Init();
-    // LED_Init();
-
-    // LED_AddBanks(0x7);
-
-    // AD_AddPins(AD_PORTV5);                  // Front Right IR Tape Sensor
-
-    // IO_PortsSetPortOutputs(PORTZ, PIN3);    // output high to provide 3.3v VCC for IR sensor
-    // IO_PortsWritePort(PORTZ, PIN3);         // output high to provide 3.3v VCC for IR sensor
-}
 /*******************************************************************************
  * PRIVATE MODULE VARIABLES                                                            *
  ******************************************************************************/
@@ -188,7 +173,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
             // INIT_ALL();
             Motors_Forward(MOTOR_MAXIMUM);
-            nextState = BUMPERTEST;
+            nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -220,7 +205,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case BUMPERTEST:
-        if (ThisEvent.EventType == ES_BUMPER)
+        if (ThisEvent.EventType == ES_BUMPERS)
         {
             if (ThisEvent.EventParam == 1)
             {

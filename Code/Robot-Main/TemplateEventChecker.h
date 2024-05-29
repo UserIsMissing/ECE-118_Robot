@@ -59,7 +59,9 @@
  * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
 uint8_t TemplateCheckBattery(void);
 
-uint8_t Bumper_Front(void);
+uint8_t Bumper_FL(void);
+uint8_t Bumper_FR(void);
+uint8_t Bumper_AllBits(void);
 uint8_t Read_Bumpers(void);
 
 uint8_t Read_TrackWireSensor(void);
@@ -77,7 +79,7 @@ uint8_t WallSensor_RL(void);
 uint8_t WallSensors_AllBits(void);
 uint8_t WallSensors_ReadAll(void);
 
-uint8_t WallSensor_RL_Analog(void);
+// uint8_t WallSensor_RL_Analog(void);
 
 
 #endif	/* TEMPLATEEVENTCHECKER_H */

@@ -94,7 +94,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */TapeSensors_ReadAll, Read_TrackWireSensor, WallSensors_ReadAll
+#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */TapeSensors_ReadAll, Read_TrackWireSensor, WallSensors_ReadAll, Read_Bumpers
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the

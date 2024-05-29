@@ -26,8 +26,8 @@
  *
  */
 
-int main(int argc, char **argv)
-{
+ void INIT_ALL(void)
+ {
     BOARD_Init();
     SERIAL_Init();
     AD_Init();
@@ -64,6 +64,12 @@ int main(int argc, char **argv)
 
     IO_PortsSetPortOutputs(PORTY, PIN5); // Y5 and Y6 comboe pins are fried
     IO_PortsSetPortOutputs(PORTY, PIN6); // Y5 and Y6 comboe pins are fried
+ }
+
+
+int main(int argc, char **argv)
+{
+    INIT_ALL();
 
 #ifdef MOTORTEST
     PWM_AddPins(PWM_PORTY10);            // PWM out to control H Bridge

@@ -128,11 +128,11 @@ uint8_t TemplateCheckBattery(void)
  ******************************************************************************/
 uint8_t Bumper_FL(void)
 {
-    return ((IO_PortsReadPort(PORTY) & PIN3) >> 3); // read the Front bumper
+    return ((IO_PortsReadPort(PORTZ) & PIN3) >> 3); // read the Front bumper
 }
 uint8_t Bumper_FR(void)
 {
-    return ((IO_PortsReadPort(PORTY) & PIN4) >> 4); // read the Front bumper
+    return ((IO_PortsReadPort(PORTZ) & PIN4) >> 4); // read the Front bumper
 }
 uint8_t Bumper_AllBits(void)
 {
@@ -253,7 +253,7 @@ uint8_t TapeSensors_ReadAll(void)
     uint16_t TapeSensors = TapeSensors_AllBits();
 
     // if (TapeSensors != 0)
-    if ((TapeSensors == TAPE_FL_MASK) || (TapeSensors == TAPE_FR_MASK) || (TapeSensors == TAPE_RL_MASK) || (TapeSensors == TAPE_BOTH_FRONT_MASK))
+    if ((TapeSensors == TAPE_FL_MASK) || (TapeSensors == TAPE_FR_MASK) || (TapeSensors == TAPE_RL_MASK) || (TapeSensors == TAPE_RR_MASK) || (TapeSensors == TAPE_BOTH_FRONT_MASK))
     {
         // printf("\r\nEVENT!!! Tape Sensor %d", TapeSensors);
         curEvent = ES_TAPESENSORS;
@@ -322,7 +322,7 @@ uint8_t WallSensors_ReadAll(void)
 
     if (WallSensors != 0)
     {
-        // printf("Wall Sensor %d \r\n", WallSensors);
+        //printf("Wall Sensor %d \r\n", WallSensors);
         curEvent = ES_WALLSENSORS;
     }
     else
@@ -352,42 +352,42 @@ uint8_t WallSensors_ReadAll(void)
  * ANALOG WALL SENSOR                                                          *
  ******************************************************************************/
 // Left side wall sensor is analog so i can maintain a certain distance from it
-uint8_t WallSensor_RL_Analog(void)
-{
-    static ES_EventTyp_t lastEvent = ES_WALL_LEFT_ANALOG;
-    ES_EventTyp_t curEvent;
-    ES_Event thisEvent;
-    uint8_t returnVal = FALSE;
+// uint8_t WallSensor_RL_Analog(void)
+// {
+//     static ES_EventTyp_t lastEvent = ES_WALL_LEFT_ANALOG;
+//     ES_EventTyp_t curEvent;
+//     ES_Event thisEvent;
+//     uint8_t returnVal = FALSE;
 
-    uint16_t Wall_Left_Analog = AD_ReadADPin(AD_PORTV8);
+//     uint16_t Wall_Left_Analog = AD_ReadADPin(AD_PORTV8);
 
-    if ((Wall_Left_Analog < WALL_LEFT_TOO_CLOSE) /* || (Wall_Left_Analog > WALL_LEFT_TOO_FAR) */)
-    {
-        // printf("Wall Sensor %d \r\n", Wall_Left_Analog);
-        curEvent = ES_WALL_LEFT_ANALOG;
-    }
-    else
-    {
-        curEvent = ES_NO_EVENT;
-    }
+//     if ((Wall_Left_Analog < WALL_LEFT_TOO_CLOSE) /* || (Wall_Left_Analog > WALL_LEFT_TOO_FAR) */)
+//     {
+//         // printf("Wall Sensor %d \r\n", Wall_Left_Analog);
+//         curEvent = ES_WALL_LEFT_ANALOG;
+//     }
+//     else
+//     {
+//         curEvent = ES_NO_EVENT;
+//     }
 
-    if (curEvent != lastEvent)
-    { // check for change from last time
-        thisEvent.EventType = curEvent;
-        thisEvent.EventParam = Wall_Left_Analog;
-        returnVal = TRUE;
-        lastEvent = curEvent; // update history
-#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
-        // PostGenericService(thisEvent);
-        // PostTemplateService(thisEvent);
-        PostTemplateHSM(thisEvent);
-        // PostTemplateFSM(thisEvent);
-#else
-        SaveEvent(thisEvent);
-#endif
-    }
-    return (returnVal);
-}
+//     if (curEvent != lastEvent)
+//     { // check for change from last time
+//         thisEvent.EventType = curEvent;
+//         thisEvent.EventParam = Wall_Left_Analog;
+//         returnVal = TRUE;
+//         lastEvent = curEvent; // update history
+// #ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+//         // PostGenericService(thisEvent);
+//         // PostTemplateService(thisEvent);
+//         PostTemplateHSM(thisEvent);
+//         // PostTemplateFSM(thisEvent);
+// #else
+//         SaveEvent(thisEvent);
+// #endif
+//     }
+//     return (returnVal);
+// }
 
 /*
  * The Test Harness for the event checkers is conditionally compiled using

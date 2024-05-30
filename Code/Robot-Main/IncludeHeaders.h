@@ -42,7 +42,9 @@ This file is used to include all the necessary header files for the project.
 #define TAPE_SENSOR_BITMASK
 #define WALL_SENSOR_BITMASK
 
-#define ES_TAPESENSORS (ES_TAPESENSOR_FL | ES_TAPESENSOR_FR | ES_TAPESENSOR_RL | ES_TAPESENSOR_RR)
+#define ES_TAPESENSORS ((ThisEvent.EventType == ES_TAPESENSOR_FL) || (ThisEvent.EventType == ES_TAPESENSOR_FR) || (ThisEvent.EventType == ES_TAPESENSOR_RL) || (ThisEvent.EventType == ES_TAPESENSOR_RR))
+#define ES_TAPESENSORS_FRONT ((ThisEvent.EventType == ES_TAPESENSOR_FL) || (ThisEvent.EventType == ES_TAPESENSOR_FR))
+#define ES_TAPESENSORS_REAR ((ThisEvent.EventType == ES_TAPESENSOR_RL) || (ThisEvent.EventType == ES_TAPESENSOR_RR))
 
 
 /* ------------------   EVENTS DEFINES   ------------------ */
@@ -108,6 +110,7 @@ PORTW, PIN7 - Rear Right Wall Sensor (Really more like Right Right Wall Sensor)
 PORTW, PIN8 - Rear Right Wall Sensor (Really more like Right Right Wall Sensor)
 // AD_PORTV8   - Rear Left Wall Sensor  (Really more like Left Left Wall Sensor)
 
+PORTW, PIN4 - Wall sensor for the back gate
 
 PORTY, PIN3 - Motor Direction Control
 PORTY, PIN4 - Motor Direction Control

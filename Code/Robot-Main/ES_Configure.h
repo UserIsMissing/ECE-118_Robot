@@ -60,6 +60,7 @@ typedef enum {
 
     ES_WALLSENSORS,  // Wall Sensor Event
     ES_WALL_LEFT_ANALOG,
+    ES_WALLSENSOR_BACKGATE,
 } ES_EventTyp_t;
 
 static const char *EventNames[] = {
@@ -89,6 +90,7 @@ static const char *EventNames[] = {
 
     "ES_WALLSENSORS",   // Wall Sensor Event
     "ES_WALL_LEFT_ANALOG",
+    "ES_WALLSENSOR_BACKGATE",
 };
 
 
@@ -100,7 +102,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */TapeSensors_ReadAll, Read_TrackWireSensor, WallSensors_ReadAll, Read_Bumpers, TapeSensors_Read_RR
+#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */ Read_TrackWireSensor, WallSensors_ReadAll, Read_Bumpers, TapeSensor_FL, TapeSensor_FR, TapeSensor_RL, TapeSensor_RR, WallSensor_BackGate
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
@@ -110,7 +112,7 @@ static const char *EventNames[] = {
 #define TIMER0_RESP_FUNC PostTemplateService
 #define TIMER1_RESP_FUNC PostTemplateHSM
 #define TIMER2_RESP_FUNC PostTemplateHSM
-#define TIMER3_RESP_FUNC TIMER_UNUSED
+#define TIMER3_RESP_FUNC PostTemplateHSM
 #define TIMER4_RESP_FUNC TIMER_UNUSED
 #define TIMER5_RESP_FUNC TIMER_UNUSED
 #define TIMER6_RESP_FUNC TIMER_UNUSED
@@ -140,9 +142,13 @@ static const char *EventNames[] = {
 #define TIMER_180 2
 #define TIMER_180_CLICKS 3100
 #define TIMER_180_2_CLICKS 3200     // 3300 might be a bit too long
-#define TIMER_90_CLICKS 950         // 800 too short
+#define TIMER_90_CLICKS 1600         // 800 too short
 
 #define TIMER_RAM_GATE_CLICKS 10000
+
+// TIMER for final wait at gate beforerestarting loop
+#define TIMER_GATEWAIT 3
+#define TIMER_GATEWAIT_CLICKS 5000
 
 
 /****************************************************************************/
@@ -154,7 +160,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 3
+#define NUM_SERVICES 4
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service
@@ -201,11 +207,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 3
 #if NUM_SERVICES > 3
 // the header file with the public fuction prototypes
-#define SERV_3_HEADER "TestService.h"
+#define SERV_3_HEADER "TemplateHSM.h"
 // the name of the Init function
-#define SERV_3_INIT TestServiceInit
+#define SERV_3_INIT InitTemplateHSM
 // the name of the run function
-#define SERV_3_RUN TestServiceRun
+#define SERV_3_RUN RunTemplateHSM
 // How big should this services Queue be?
 #define SERV_3_QUEUE_SIZE 3
 #endif

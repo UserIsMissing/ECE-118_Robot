@@ -49,6 +49,7 @@
     IO_PortsSetPortInputs(PORTW, PIN7); // Rear Right Wall Sensor
     IO_PortsSetPortInputs(PORTW, PIN8); // Rear Left Wall Sensor (Really more like Left Left Wall Sensor)
     // AD_AddPins(AD_PORTV8);              // Rear Left Wall Sensor (Really more like Left Left Wall Sensor)
+    IO_PortsSetPortInputs(PORTW, PIN4); // Rear Left Wall Sensor (Really more like Left Left Wall Sensor)
 
     AD_AddPins(AD_PORTV4); // Trackwire Sensor
 

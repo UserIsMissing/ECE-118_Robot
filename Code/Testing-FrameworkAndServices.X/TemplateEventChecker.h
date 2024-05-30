@@ -73,6 +73,8 @@ uint8_t WallSensor_RL(void);
 uint8_t WallSensors_AllBits(void);
 uint8_t WallSensors_ReadAll(void);
 
+uint8_t WallSensor_BackGate(void);
+
 
 #endif	/* TEMPLATEEVENTCHECKER_H */
 

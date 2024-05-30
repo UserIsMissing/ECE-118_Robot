@@ -182,7 +182,6 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
-
     case Random:
         // Motors_Forward(MOTOR_MAXIMUM);
         if (ThisEvent.EventType == ES_WALLSENSORS) // Found wall, Transition
@@ -197,20 +196,34 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         if (ES_TAPESENSORS) // Turning away from tape
         {
-            printf("\r\nRandom: Tape Sensor");
+            //printf("\r\nRandom: Tape Sensor");
             ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             Tank_Right(MOTOR_MAXIMUM);
             nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_TIMEOUT) // Turning away from tape TIMER
+        if (ThisEvent.EventType == ES_BUMPERS) // Turning away from tape
+        {
+            //printf("\r\nRandom: Tape Sensor");
+            ES_Timer_InitTimer(TIMER_180, TIMER_REVERSE_CLICKS);
+            Motors_Backward();
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT)) // Turning away from tape TIMER
         {
             // printf("\r\nES_TIMEOUT");
             if (ThisEvent.EventParam == TIMER_TURN)
             {
                 Motors_Forward(MOTOR_MAXIMUM);
             }
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) // Turning away from tape TIMER
+        {
+            Robot_LeftWheelSpeed(900);
+            Robot_RightWheelSpeed(750);
         }
         break;
 

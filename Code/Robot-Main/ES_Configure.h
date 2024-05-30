@@ -143,12 +143,13 @@ static const char *EventNames[] = {
 #define TIMER_180_CLICKS 3100
 #define TIMER_180_2_CLICKS 3200     // 3300 might be a bit too long
 #define TIMER_90_CLICKS 1600         // 800 too short
-
 #define TIMER_RAM_GATE_CLICKS 10000
 
 // TIMER for final wait at gate beforerestarting loop
 #define TIMER_GATEWAIT 3
 #define TIMER_GATEWAIT_CLICKS 5000
+
+//TIMER for reverse after hitting obstacle
 
 
 /****************************************************************************/
@@ -160,7 +161,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 4
+#define NUM_SERVICES 5
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service
@@ -220,11 +221,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 4
 #if NUM_SERVICES > 4
 // the header file with the public fuction prototypes
-#define SERV_4_HEADER "TestService.h"
+#define SERV_4_HEADER "TemplateHSM.h"
 // the name of the Init function
-#define SERV_4_INIT TestServiceInit
+#define SERV_4_INIT InitTemplateHSM
 // the name of the run function
-#define SERV_4_RUN TestServiceRun
+#define SERV_4_RUN RunTemplateHSM
 // How big should this services Queue be?
 #define SERV_4_QUEUE_SIZE 3
 #endif

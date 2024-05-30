@@ -289,7 +289,8 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     case Snake2: // Path #2, going left to tape
         // FIRST 180 to start gapped path. Check back left sensor
-        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+        // if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+        if (ThisEvent.EventType == ES_TAPESENSOR_RL)
         {
             Robot_LeftWheelSpeed(-1);
             Robot_RightWheelSpeed(-900);
@@ -328,7 +329,8 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             Robot_LeftWheelSpeed(-900);
         }
         // Hit back Left sensor and then start the 3rd snake path.
-        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+        // if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+        if (ThisEvent.EventType == ES_TAPESENSOR_RL)
         {
             // Motors_Stop();
             Motors_Forward(MOTOR_MAXIMUM);
@@ -356,7 +358,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         // if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
         {
             // Tank_Left(800);
-            Motors_Backward();
+            Motors_Forward(800);
             nextState = Reverse2;
             makeTransition = TRUE;
             // ThisEvent.EventType = ES_NO_EVENT;
@@ -364,11 +366,29 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case Reverse2:
-        if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+     if (ThisEvent.EventType == ES_TAPESENSOR_FL)
+        {
+            Motors_Stop();
+            Robot_RightWheelSpeed(700);
+        }
+        if (ThisEvent.EventType == ES_TAPESENSOR_FR)
+        {
+            Motors_Stop();
+            Motors_Backward();
+            nextState = Reverse3;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        break;
+    break;
+
+    case Reverse3:  // Go forward until you hit the tape, then reverse to wall in Reverse3
+        // if ((ThisEvent.EventType == ES_TAPESENSORS) && (ThisEvent.EventParam == 4))
+        if (ThisEvent.EventType == ES_TAPESENSOR_RL)
         {
             Tank_Left(800);
         }
-        if (ThisEvent.EventType == ES_NO_EVENT)
+        if (ThisEvent.EventType == ES_TAPESENSOR_RR)
         {
             Robot_LeftWheelSpeed(-700);
             Robot_RightWheelSpeed(-MOTOR_MAXIMUM);

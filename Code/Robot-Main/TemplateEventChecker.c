@@ -216,48 +216,20 @@ uint8_t Read_TrackWireSensor(void)
 }
 
 /*******************************************************************************
- * TAPE SENSOR WITH BITMASK                                                    *
+ * TAPE SENSOR FRONT LEFT                                                      *
  ******************************************************************************/
 uint8_t TapeSensor_FL(void)
 {
-    return ((IO_PortsReadPort(PORTV) & PIN3) >> 3); // read the Front Left tape sensor
-}
-
-uint8_t TapeSensor_FR(void)
-{
-    return ((IO_PortsReadPort(PORTV) & PIN5) >> 5); // read the Front Right tape sensor
-}
-
-uint8_t TapeSensor_RL(void)
-{
-    return ((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
-}
-
-// uint8_t TapeSensor_RR(void)
-// {
-//     return ((IO_PortsReadPort(PORTV) & PIN8) >> 8); // read the Rear Right tape sensor
-// }
-
-uint8_t TapeSensors_AllBits(void)
-{
-    return (TapeSensor_FL() | (TapeSensor_FR() << 1) | (TapeSensor_RL() << 2)  /* TapeSensor_RR() << 3 */);
-}
-
-uint8_t TapeSensors_ReadAll(void)
-{
-    static ES_EventTyp_t lastEvent = ES_TAPESENSORS;
+    static ES_EventTyp_t lastEvent = ES_TAPESENSOR_FL;
     ES_EventTyp_t curEvent;
     ES_Event thisEvent;
     uint8_t returnVal = FALSE;
 
-    uint16_t TapeSensors = TapeSensors_AllBits();
-    //printf("\r\nmask:%d",TapeSensors);
-
-    // if (TapeSensors != 0)
-    if ((TapeSensors == TAPE_FL_MASK) || (TapeSensors == TAPE_FR_MASK) || (TapeSensors == TAPE_RL_MASK)/*  || (TapeSensors == TAPE_RR_MASK) */ || (TapeSensors == TAPE_BOTH_FRONT_MASK)/*  || (TapeSensors == TAPE_BOTH_REAR_MASK) */)
+    uint16_t TapeSensor = ((IO_PortsReadPort(PORTV) & PIN3) >> 3);
+    
+    if (TapeSensor == 1)
     {
-        //printf("\r\nEVENT!!! Tape Sensor %d", TapeSensors);
-        curEvent = ES_TAPESENSORS;
+        curEvent = ES_TAPESENSOR_FL;
     }
     else
     {
@@ -266,17 +238,12 @@ uint8_t TapeSensors_ReadAll(void)
 
     if (curEvent != lastEvent)
     { // check for change from last time
-        // printf("\r\nEVENT: %d", thisEvent.EventParam);
-
         thisEvent.EventType = curEvent;
-        thisEvent.EventParam = TapeSensors;
+        thisEvent.EventParam = TapeSensor;
         returnVal = TRUE;
         lastEvent = curEvent; // update history
 #ifndef EVENTCHECKER_TEST     // keep this as is for test harness
-        // PostGenericService(thisEvent);
-        // PostTemplateService(thisEvent);
         PostTemplateHSM(thisEvent);
-        // PostTemplateFSM(thisEvent);
 #else
         SaveEvent(thisEvent);
 #endif
@@ -285,15 +252,81 @@ uint8_t TapeSensors_ReadAll(void)
 }
 
 /*******************************************************************************
- * IR SENSOR WITH BITMASK                                                      *
+ * TAPE SENSOR FRONT RIGHT                                                     *
  ******************************************************************************/
-//  TAPE SENSOR REAR RIGHT
-uint8_t TapeSensor_RR(void)
+uint8_t TapeSensor_FR(void)
 {
-    return ((IO_PortsReadPort(PORTV) & PIN8) >> 8); // read the Rear Right tape sensor
+    static ES_EventTyp_t lastEvent = ES_TAPESENSOR_FR;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    uint16_t TapeSensor = ((IO_PortsReadPort(PORTV) & PIN5) >> 5);
+
+    if (TapeSensor == 1)
+    {
+        curEvent = ES_TAPESENSOR_FR;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = TapeSensor;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        PostTemplateHSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
 }
 
-uint8_t TapeSensors_Read_RR(void)
+/*******************************************************************************
+ * TAPE SENSOR REAR LEFT                                                       *
+ ******************************************************************************/
+uint8_t TapeSensor_RL(void)
+{
+    static ES_EventTyp_t lastEvent = ES_TAPESENSOR_RL;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    uint16_t TapeSensor = ((IO_PortsReadPort(PORTV) & PIN7) >> 7);
+
+    if (TapeSensor == 1)
+    {
+        curEvent = ES_TAPESENSOR_RL;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = TapeSensor;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        PostTemplateHSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+
+/*******************************************************************************
+ * TAPE SENSOR REAR RIGHT                                                      *
+ ******************************************************************************/
+uint8_t TapeSensor_RR(void)
 {
     static ES_EventTyp_t lastEvent = ES_TAPESENSOR_RR;
     ES_EventTyp_t curEvent;

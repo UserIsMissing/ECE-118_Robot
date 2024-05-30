@@ -42,6 +42,8 @@ This file is used to include all the necessary header files for the project.
 #define TAPE_SENSOR_BITMASK
 #define WALL_SENSOR_BITMASK
 
+#define ES_TAPESENSORS (ES_TAPESENSOR_FL | ES_TAPESENSOR_FR | ES_TAPESENSOR_RL | ES_TAPESENSOR_RR)
+
 
 /* ------------------   EVENTS DEFINES   ------------------ */
 #define TRACK_WIRE_VALUE 900

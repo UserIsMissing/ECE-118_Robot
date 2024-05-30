@@ -53,8 +53,10 @@ typedef enum {
 
     ES_BUMPERS,     // Bumper Event
 
-    ES_TAPESENSORS,  // Tape Sensor Event
-    ES_TAPESENSOR_RR,  // Tape Sensor Event REAR RIGHT
+    ES_TAPESENSOR_FL,   // Tape Sensor Event FRONT LEFT
+    ES_TAPESENSOR_FR,   // Tape Sensor Event FRONT RIGHT
+    ES_TAPESENSOR_RL,   // Tape Sensor Event REAR LEFT
+    ES_TAPESENSOR_RR,   // Tape Sensor Event REAR RIGHT
 
     ES_WALLSENSORS,  // Wall Sensor Event
     ES_WALL_LEFT_ANALOG,
@@ -80,7 +82,9 @@ static const char *EventNames[] = {
 
     "ES_BUMPERS",       // Bumper Event
 
-    "ES_TAPESENSORS",   // Tape Sensor Event
+    "ES_TAPESENSOR_FL",   // Tape Sensor Event FRONT LEFT
+    "ES_TAPESENSOR_FR",   // Tape Sensor Event FRONT RIGHT
+    "ES_TAPESENSOR_RL",   // Tape Sensor Event REAR LEFT
     "ES_TAPESENSOR_RR",   // Tape Sensor Event REAR RIGHT
 
     "ES_WALLSENSORS",   // Wall Sensor Event

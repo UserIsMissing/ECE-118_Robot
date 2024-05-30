@@ -54,6 +54,7 @@ typedef enum {
     ES_BUMPERS,     // Bumper Event
 
     ES_TAPESENSORS,  // Tape Sensor Event
+    ES_TAPESENSOR_RR,  // Tape Sensor Event REAR RIGHT
 
     ES_WALLSENSORS,  // Wall Sensor Event
     ES_WALL_LEFT_ANALOG,
@@ -80,6 +81,7 @@ static const char *EventNames[] = {
     "ES_BUMPERS",       // Bumper Event
 
     "ES_TAPESENSORS",   // Tape Sensor Event
+    "ES_TAPESENSOR_RR",   // Tape Sensor Event REAR RIGHT
 
     "ES_WALLSENSORS",   // Wall Sensor Event
     "ES_WALL_LEFT_ANALOG",
@@ -94,7 +96,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */TapeSensors_ReadAll, Read_TrackWireSensor, WallSensors_ReadAll, Read_Bumpers
+#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */TapeSensors_ReadAll, Read_TrackWireSensor, WallSensors_ReadAll, Read_Bumpers, TapeSensors_Read_RR
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the

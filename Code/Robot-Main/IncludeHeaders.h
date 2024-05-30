@@ -49,12 +49,14 @@ This file is used to include all the necessary header files for the project.
 #define BUMP_FL_MASK 0b0001
 #define BUMP_FR_MASK 0b0010
 
-#define TAPE_FL_MASK 0b0001
-#define TAPE_FR_MASK 0b0010
-#define TAPE_RL_MASK 0b0100
-#define TAPE_RR_MASK 0b1000
-#define TAPE_BOTH_FRONT_MASK 0b0110
-#define TAPE_BOTH_LEFT_MASK 0b0101
+#define TAPE_FL_MASK 0b001
+#define TAPE_FR_MASK 0b010
+#define TAPE_RL_MASK 0b100
+#define TAPE_BOTH_FRONT_MASK 0b011
+// #define TAPE_BOTH_REAR_MASK 0b1100
+#define TAPE_BOTH_LEFT_MASK 0b101
+
+#define TAPE_RR_MASK 0b1
 
 #define WALL_FL_MASK 0b0001
 #define WALL_FR_MASK 0b0010

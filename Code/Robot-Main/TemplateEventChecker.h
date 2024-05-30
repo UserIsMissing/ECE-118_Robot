@@ -69,8 +69,11 @@ uint8_t Read_TrackWireSensor(void);
 uint8_t TapeSensor_FL(void);
 uint8_t TapeSensor_FR(void);
 uint8_t TapeSensor_RL(void);
+uint8_t TapeSensor_RR(void);
+
 uint8_t TapeSensors_AllBits(void);
 uint8_t TapeSensors_ReadAll(void);
+
 
 uint8_t WallSensor_FL(void);
 uint8_t WallSensor_FR(void);

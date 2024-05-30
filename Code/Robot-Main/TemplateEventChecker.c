@@ -233,14 +233,14 @@ uint8_t TapeSensor_RL(void)
     return ((IO_PortsReadPort(PORTV) & PIN7) >> 7); // read the Rear Left tape sensor
 }
 
-uint8_t TapeSensor_RR(void)
-{
-    return ((IO_PortsReadPort(PORTV) & PIN8) >> 8); // read the Rear Right tape sensor
-}
+// uint8_t TapeSensor_RR(void)
+// {
+//     return ((IO_PortsReadPort(PORTV) & PIN8) >> 8); // read the Rear Right tape sensor
+// }
 
 uint8_t TapeSensors_AllBits(void)
 {
-    return (TapeSensor_FL() | (TapeSensor_FR() << 1) | (TapeSensor_RL() << 2) | TapeSensor_RR() << 3);
+    return (TapeSensor_FL() | (TapeSensor_FR() << 1) | (TapeSensor_RL() << 2)  /* TapeSensor_RR() << 3 */);
 }
 
 uint8_t TapeSensors_ReadAll(void)
@@ -254,7 +254,7 @@ uint8_t TapeSensors_ReadAll(void)
     //printf("\r\nmask:%d",TapeSensors);
 
     // if (TapeSensors != 0)
-    if ((TapeSensors == TAPE_FL_MASK) || (TapeSensors == TAPE_FR_MASK) || (TapeSensors == TAPE_RL_MASK) || (TapeSensors == TAPE_RR_MASK) || (TapeSensors == TAPE_BOTH_FRONT_MASK))
+    if ((TapeSensors == TAPE_FL_MASK) || (TapeSensors == TAPE_FR_MASK) || (TapeSensors == TAPE_RL_MASK)/*  || (TapeSensors == TAPE_RR_MASK) */ || (TapeSensors == TAPE_BOTH_FRONT_MASK)/*  || (TapeSensors == TAPE_BOTH_REAR_MASK) */)
     {
         //printf("\r\nEVENT!!! Tape Sensor %d", TapeSensors);
         curEvent = ES_TAPESENSORS;
@@ -284,6 +284,58 @@ uint8_t TapeSensors_ReadAll(void)
     return (returnVal);
 }
 
+/*******************************************************************************
+ * IR SENSOR WITH BITMASK                                                      *
+ ******************************************************************************/
+//  TAPE SENSOR REAR RIGHT
+uint8_t TapeSensor_RR(void)
+{
+    return ((IO_PortsReadPort(PORTV) & PIN8) >> 8); // read the Rear Right tape sensor
+}
+
+uint8_t TapeSensors_Read_RR(void)
+{
+    static ES_EventTyp_t lastEvent = ES_TAPESENSOR_RR;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    // uint16_t TapeSensors = TapeSensors_AllBits();
+    uint16_t TapeSensor_RR = ((IO_PortsReadPort(PORTV) & PIN8) >> 8);
+    // printf("\r\nmask:%d",TapeSensor_RR);
+
+    // if (TapeSensors != 0)
+    if ((TapeSensor_RR == 1))
+    {
+        // printf("\r\nEVENT!!! Tape Sensor %d", TapeSensor_RR);
+        curEvent = ES_TAPESENSOR_RR;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        // printf("\r\nEVENT: %d", thisEvent.EventParam);
+
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = TapeSensor_RR;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        // PostGenericService(thisEvent);
+        // PostTemplateService(thisEvent);
+        PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+
+ 
 /*******************************************************************************
  * WALL SENSOR WITH BITMASK                                                    *
  ******************************************************************************/

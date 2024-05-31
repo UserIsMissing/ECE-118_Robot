@@ -145,11 +145,10 @@ static const char *EventNames[] = {
 #define TIMER_90_CLICKS 1600         // 800 too short
 #define TIMER_30S_CLICKS 30000
 #define TIMER_RAM_GATE_CLICKS 10000
-
+#define TIMER_REVERSE_CLICKS 750
 // TIMER for final wait at gate beforerestarting loop
 #define TIMER_GATEWAIT 3
 #define TIMER_GATEWAIT_CLICKS 5000
-#define TIMER_REVERSE_CLICKS 750
 
 //TIMER for reverse after hitting obstacle
 

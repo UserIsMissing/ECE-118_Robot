@@ -48,6 +48,8 @@ typedef enum
     InitPState,
     Random,
     Random30,
+    RandomLeft,
+    RandomRight,
     WallRide,
     WallRidePT2,
     Snake1,  // Wall Follow
@@ -67,6 +69,8 @@ static const char *StateNames[] = {
     "InitPState",
     "Random",
     "Random30",
+    "RandomRight",
+    "RandomLeft",
     "WallRide",
     "WallRidePT2",
     "Snake1",
@@ -195,33 +199,24 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_WALLSENSORS) // Turning away from tape
-        {
-            
-            ES_Timer_InitTimer(3, TIMER_REVERSE_CLICKS);
-            Motors_Backward();
-            nextState = Random30;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-        }
-        /*if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 1) ||(ThisEvent.EventParam == 8))) // Turning away from tape
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 1) ||(ThisEvent.EventParam == 8))) // Turning away from tape
         {
             printf("\r\nTape Sensor18");
             ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             Tank_Right(MOTOR_MAXIMUM);
-            nextState = Random30;
+            nextState = RandomLeft;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 2) ||(ThisEvent.EventParam == 4))) // Turning away from tape
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 2) || (ThisEvent.EventParam == 4))) // Turning away from tape
         {
             printf("\r\nTape Sensor24");
             ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             Tank_Left(MOTOR_MAXIMUM);
-            nextState = Random30;
+            nextState = RandomRight;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
-        }*/
+        }
         if (ThisEvent.EventType == ES_BUMPERS) // Turning away from tape
         {
             //printf("\r\nRandom: Tape Sensor");
@@ -247,9 +242,26 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
            Robot_LeftWheelSpeed(600);
            Robot_RightWheelSpeed(900);
         }
-
         break;
-
+    case RandomLeft:
+        if (ThisEvent.EventType == ES_TIMEOUT){
+            printf("\r\nRandomLeft");
+            Motors_Forward(MOTOR_MAXIMUM);
+            nextState = Random30;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        break;
+    case RandomRight:
+        if (ThisEvent.EventType == ES_TIMEOUT){
+            printf("\r\nRandomRight");
+            Robot_LeftWheelSpeed(800);
+            Robot_RightWheelSpeed(950);
+            nextState = Random30;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        break;
     case Random:
         // Motors_Forward(MOTOR_MAXIMUM);
         if (ThisEvent.EventType == ES_WALLSENSORS) // Found wall, Transition
@@ -274,7 +286,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_BUMPERS) // Turning away from tape
         {
             //printf("\r\nRandom: Tape Sensor");
-            ES_Timer_InitTimer(TIMER_180, TIMER_REVERSE_CLICKS);
+            ES_Timer_InitTimer(3, TIMER_REVERSE_CLICKS);
             Motors_Backward();
             nextState = Random;
             makeTransition = TRUE;
@@ -288,10 +300,9 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
                 Motors_Forward(MOTOR_MAXIMUM);
             }
         }
-        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) // Turning away from tape TIMER
-        {
-            Robot_LeftWheelSpeed(900);
-            Robot_RightWheelSpeed(750);
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 3)){
+           Robot_LeftWheelSpeed(600);
+           Robot_RightWheelSpeed(900);
         }
         break;
 
@@ -369,10 +380,10 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ES_TAPESENSORS)
         {
             // ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
-            Reverse_Pivot_Right(900);
-            nextState = Snake2;
+            
+            nextState = Random;
             makeTransition = TRUE;
-            // ThisEvent.EventType = ES_NO_EVENT;
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 

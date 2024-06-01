@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "templatehsm.h": "c",
-        "stdlib.h": "c",
-        "templatesubhsm.h": "c",
-        "templatefsm.h": "c"
-    }
-}

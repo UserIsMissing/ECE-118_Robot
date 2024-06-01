@@ -147,7 +147,7 @@ uint8_t Read_Bumpers(void)
     uint8_t returnVal = FALSE;
     uint16_t Bumpers = Bumper_AllBits();
 
-    if (Bumpers == BUMP_FL_MASK || Bumpers == BUMP_FR_MASK || Bumpers == BUMP_BOTH_MASK)
+    if (Bumpers == BUMP_FL_MASK || Bumpers == BUMP_FR_MASK)
     {
         // printf("Bumper %d \r\n", Bumpers);
         curEvent = ES_BUMPERS;

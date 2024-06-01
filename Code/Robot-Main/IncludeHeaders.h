@@ -52,7 +52,7 @@ This file is used to include all the necessary header files for the project.
 
 #define BUMP_FL_MASK 0b0001
 #define BUMP_FR_MASK 0b0010
-#define BUMP_BOTH_MASK 0b11
+
 #define TAPE_FL_MASK 0b001
 #define TAPE_FR_MASK 0b010
 #define TAPE_RL_MASK 0b100

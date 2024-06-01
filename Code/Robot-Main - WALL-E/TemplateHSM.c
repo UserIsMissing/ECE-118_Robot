@@ -171,6 +171,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     // Snake along the wall 3 times then do a pivot and find gate
     // Left, Right, Left, Left pivot (or just go right again) and find gate
     static uint8_t WallCounter = 0;
+    static uint8_t RAMCounter = 0;
 
     ES_Tattle(); // trace call stack
 
@@ -327,14 +328,12 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_TAPESENSOR_RR)
         {
             Motors_Stop();
-            nextState = Snake35;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            Pivot_Left(700);
         }
         if (ThisEvent.EventType == ES_TAPESENSOR_FL)
         {
             Motors_Stop();
-            nextState = Snake2;
+            nextState = GateLineUp3;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -343,11 +342,6 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case GateLineUp3:
         if (ThisEvent.EventType == ES_ENTRY)
         {
-            Tank_Left(900);
-        }
-        if (ThisEvent.EventType == ES_TAPESENSOR_FL)
-        {
-            Motors_Stop();
             Robot_LeftWheelSpeed(-1000);
             Robot_RightWheelSpeed(-1000);
             nextState = RAM;
@@ -481,8 +475,11 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     case RAM:
         WallCounter = 0;
+        RAMCounter++;
         if (ThisEvent.EventType == ES_ENTRY)
         {
+            Robot_LeftWheelSpeed(-1000);
+            Robot_RightWheelSpeed(-1000);
             ES_Timer_InitTimer(TIMER_TURN, 200); // Go Forward
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_TURN))
@@ -497,9 +494,18 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         if (ThisEvent.EventType == ES_WALLSENSOR_BACKGATE)
         {
-            nextState = RAM2;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            if (RAMCounter < 2)
+            {
+                nextState = RAM2;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
+            }
+            else
+            {
+                nextState = RAM;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
+            }
         }
         break;
     case RAM2:

@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Robot-Main
+PROJECTNAME=Robot-Main - WALL-E
 
 # Active Configuration
 DEFAULTCONF=default

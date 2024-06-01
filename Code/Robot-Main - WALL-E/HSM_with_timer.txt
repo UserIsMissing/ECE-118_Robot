@@ -303,7 +303,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case WallRidePT2: // 180 on the tape to setup for snake
         // if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180)) || (ThisEvent.EventType == ES_TAPESENSORS && ThisEvent.EventParam == TAPE_RL_MASK))
         // if (ThisEvent.EventType == ES_WALL_LEFT_ANALOG)
-        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == Wall_RL_MASK))
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RL_MASK))
         {
             printf("\r\nWallRide2");
             Motors_Stop();
@@ -321,7 +321,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         // TOO CLOSE TOO WALL
         // if ((ThisEvent.EventType == ES_WALL_LEFT_ANALOG) && (ThisEvent.EventParam <= WALL_LEFT_TOO_CLOSE))
-        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == Wall_RL_MASK))
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RL_MASK))
         {
             Robot_LeftWheelSpeed(1000);
             Robot_RightWheelSpeed(700);

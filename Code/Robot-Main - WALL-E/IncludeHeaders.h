@@ -26,7 +26,6 @@ This file is used to include all the necessary header files for the project.
 #include <ES_Events.h>
 #include <ES_General.h>
 
-
 /* ------------------   DEFINES  ----------------- */
 
 /* ------------------   TESTS   ------------------ */
@@ -36,7 +35,6 @@ This file is used to include all the necessary header files for the project.
 // #define IOTEST
 // #define TRACKWIRETEST
 
-
 /* ------------------   EVENTS TESTS   ------------------ */
 // #define TAPE_SENSOR_WORKING
 #define TAPE_SENSOR_BITMASK
@@ -45,7 +43,6 @@ This file is used to include all the necessary header files for the project.
 #define ES_TAPESENSORS ((ThisEvent.EventType == ES_TAPESENSOR_FL) || (ThisEvent.EventType == ES_TAPESENSOR_FR) || (ThisEvent.EventType == ES_TAPESENSOR_RL) || (ThisEvent.EventType == ES_TAPESENSOR_RR))
 #define ES_TAPESENSORS_FRONT ((ThisEvent.EventType == ES_TAPESENSOR_FL) || (ThisEvent.EventType == ES_TAPESENSOR_FR))
 #define ES_TAPESENSORS_REAR ((ThisEvent.EventType == ES_TAPESENSOR_RL) || (ThisEvent.EventType == ES_TAPESENSOR_RR))
-
 
 /* ------------------   EVENTS DEFINES   ------------------ */
 #define TRACK_WIRE_VALUE 900
@@ -65,16 +62,16 @@ This file is used to include all the necessary header files for the project.
 #define WALL_FL_MASK 0b0001
 #define WALL_FR_MASK 0b0010
 #define WALL_RR_MASK 0b0100
-#define Wall_RL_MASK 0b1000
+#define WALL_RL_MASK 0b1000
 #define WALL_BOTH_FRONT_MASK 0b0110
 #define WALL_BOTH_LEFT_MASK 0b0101
 
-#define WALL_LEFT_TOO_CLOSE 40     // For snake, when bot is too close to the wall, it will turn right slightly (into the wall)
-#define WALL_LEFT_TOO_FAR 1000       // For snake, when bot is too far from the wall, it will turn left slightly  (away from the wall)
+#define WALL_LEFT_TOO_CLOSE 40 // For snake, when bot is too close to the wall, it will turn right slightly (into the wall)
+#define WALL_LEFT_TOO_FAR 1000 // For snake, when bot is too far from the wall, it will turn left slightly  (away from the wall)
 
 /* ------------------   MOTOR DEFINES   ------------------ */
 #define MOTOR_MINIMUM -1000
-#define MOTOR_MAXIMUM 1000 
+#define MOTOR_MAXIMUM 1000
 
 // Setting the pins for the motors HIGH and LOW
 #define LEFT_PIN1_HIGH IO_PortsWritePort(PORTY, PIN3)
@@ -92,8 +89,7 @@ This file is used to include all the necessary header files for the project.
 #define LEFT_PWM PWM_PORTY10
 #define RIGHT_PWM PWM_PORTY12
 
-
-/* ------------------   LIST OF USED PINS   ------------------ 
+/* ------------------   LIST OF USED PINS   ------------------
 AD_PORTV4 - Trackwire Sensor
 
 PORTZ, PIN3 - Front Left Bumper Switch
@@ -121,6 +117,5 @@ PORTZ, PIN6 - PWM out to control H Bridge
 PORTV, PIN5 | PIN6 - Digital Outs to In1 and In2
 PORTV, PIN7 - In from Limit Switch
 */
-
 
 #endif /* INCLUDEHEADERS_H */

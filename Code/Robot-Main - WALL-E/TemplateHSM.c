@@ -230,12 +230,12 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_TIMEOUT) // Turning away from tape TIMER
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_TURN)) // Turning away from tape TIMER
         {
-            if (ThisEvent.EventParam == TIMER_TURN)
-            {
+            // if (ThisEvent.EventParam == TIMER_TURN)
+            // {
                 Motors_Forward(MOTOR_MAXIMUM);
-            }
+            // }
         }
         if (ThisEvent.EventType == ES_WALLSENSORS) // Found wall, Transition
         {

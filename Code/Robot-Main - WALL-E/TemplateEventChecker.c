@@ -195,7 +195,8 @@ uint8_t Bumper_Left(void)
     }
     else
     {
-        curEvent = ES_NO_BUMPER_LEFT;
+        // curEvent = ES_NO_BUMPER_LEFT;
+        curEvent = ES_NO_EVENT;
     }
 
     if (curEvent != lastEvent)
@@ -231,7 +232,8 @@ uint8_t Bumper_Right(void)
     }
     else
     {
-        curEvent = ES_NO_BUMPER_RIGHT;
+        // curEvent = ES_NO_BUMPER_RIGHT;
+        curEvent = ES_NO_EVENT;
     }
 
     if (curEvent != lastEvent)

@@ -126,13 +126,14 @@ uint8_t TemplateCheckBattery(void)
 /*******************************************************************************
  * BUMPERS                                                                     *
  ******************************************************************************/
+/* 
 uint8_t Bumper_FL(void)
 {
-    return ((IO_PortsReadPort(PORTZ) & PIN3) >> 3); // read the Front bumper
+    return ((IO_PortsReadPort(PORTZ) & PIN3) >> 3); // read the Front Left bumper
 }
 uint8_t Bumper_FR(void)
 {
-    return ((IO_PortsReadPort(PORTZ) & PIN4) >> 4); // read the Front bumper
+    return ((IO_PortsReadPort(PORTZ) & PIN4) >> 4); // read the Front Right bumper
 }
 uint8_t Bumper_AllBits(void)
 {
@@ -174,6 +175,80 @@ uint8_t Read_Bumpers(void)
     }
     return (returnVal);    
 }
+*/
+
+/*******************************************************************************
+ * BUMPER LEFT                                                                 *
+ ******************************************************************************/
+uint8_t Bumper_Left(void)
+{
+    static ES_EventTyp_t lastEvent = ES_BUMPER_LEFT;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    uint16_t Bumper_Left = ((IO_PortsReadPort(PORTZ) & PIN3) >> 3);
+
+    if (Bumper_Left == 1)
+    {
+        curEvent = ES_BUMPER_LEFT;
+    }
+    else
+    {
+        curEvent = ES_NO_BUMPER_LEFT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = Bumper_Left;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        PostTemplateHSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+
+/*******************************************************************************
+ * BUMPER RIGHT                                                                *
+ ******************************************************************************/
+uint8_t Bumper_Right(void)
+{
+    static ES_EventTyp_t lastEvent = ES_BUMPER_RIGHT;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+
+    uint16_t Bumper_Right = ((IO_PortsReadPort(PORTZ) & PIN4) >> 4);
+
+    if (Bumper_Right == 1)
+    {
+        curEvent = ES_BUMPER_RIGHT;
+    }
+    else
+    {
+        curEvent = ES_NO_BUMPER_RIGHT;
+    }
+
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = Bumper_Right;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        PostTemplateHSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
+
 
 /*******************************************************************************
  * TRACK WIRE SENSOR                                                           *

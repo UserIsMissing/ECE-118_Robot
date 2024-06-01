@@ -27,6 +27,7 @@ This file is used to include all the necessary header files for the project.
 #include <ES_General.h>
 
 /* ------------------   DEFINES  ----------------- */
+#define DELAY(x)         for (wait = 0; wait <= x; wait++) {asm("nop");}
 
 /* ------------------   TESTS   ------------------ */
 // #define MOTORTEST
@@ -43,6 +44,8 @@ This file is used to include all the necessary header files for the project.
 #define ES_TAPESENSORS ((ThisEvent.EventType == ES_TAPESENSOR_FL) || (ThisEvent.EventType == ES_TAPESENSOR_FR) || (ThisEvent.EventType == ES_TAPESENSOR_RL) || (ThisEvent.EventType == ES_TAPESENSOR_RR))
 #define ES_TAPESENSORS_FRONT ((ThisEvent.EventType == ES_TAPESENSOR_FL) || (ThisEvent.EventType == ES_TAPESENSOR_FR))
 #define ES_TAPESENSORS_REAR ((ThisEvent.EventType == ES_TAPESENSOR_RL) || (ThisEvent.EventType == ES_TAPESENSOR_RR))
+
+#define ES_BUMPERS ((ThisEvent.EventType == ES_BUMPER_LEFT) || (ThisEvent.EventType == ES_BUMPER_RIGHT))
 
 /* ------------------   EVENTS DEFINES   ------------------ */
 #define TRACK_WIRE_VALUE 900

@@ -51,7 +51,11 @@ typedef enum {
     TRACKWIRE_DETECTED,
     TRACKWIRE_NOT_DETECTED,
 
-    ES_BUMPERS,     // Bumper Event
+    // ES_BUMPERS,     // Bumper Event
+    ES_BUMPER_LEFT,
+    ES_BUMPER_RIGHT,
+    ES_NO_BUMPER_LEFT,
+    ES_NO_BUMPER_RIGHT,
 
     ES_TAPESENSOR_FL,   // Tape Sensor Event FRONT LEFT
     ES_TAPESENSOR_FR,   // Tape Sensor Event FRONT RIGHT
@@ -82,6 +86,10 @@ static const char *EventNames[] = {
     "TRACKWIRE_NOT_DETECTED",
 
     "ES_BUMPERS",       // Bumper Event
+    "ES_BUMPER_LEFT",
+    "ES_BUMPER_RIGHT",
+    "ES_NO_BUMPER_LEFT",
+    "ES_NO_BUMPER_RIGHT",
 
     "ES_TAPESENSOR_FL",   // Tape Sensor Event FRONT LEFT
     "ES_TAPESENSOR_FR",   // Tape Sensor Event FRONT RIGHT
@@ -102,7 +110,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */ Read_TrackWireSensor, WallSensors_ReadAll, Read_Bumpers, TapeSensor_FL, TapeSensor_FR, TapeSensor_RL, TapeSensor_RR, WallSensor_BackGate
+#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */ Read_TrackWireSensor, WallSensors_ReadAll, TapeSensor_FL, TapeSensor_FR, TapeSensor_RL, TapeSensor_RR, WallSensor_BackGate, Bumper_Left, Bumper_Right, // Read_Bumpers,
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
@@ -150,6 +158,8 @@ static const char *EventNames[] = {
 #define TIMER_GATEWAIT_CLICKS 5000
 
 //TIMER for reverse after hitting obstacle
+#define TIMER_OBSTACLE 4
+#define TIMER_OBSTACLE_CLICKS 200
 
 
 /****************************************************************************/

@@ -54,6 +54,9 @@ typedef enum
     GateLineUp,
     GateLineUp2,
     GateLineUp3,
+    BumperGoingLeft,
+    BumperGoingRight,
+
     Snake2,   // Snake pass #2 (Travels Left)
     Snake25,  // Snake 2.5 is used for the 180 reverse
     Snake3,   // Snake pass #3 (Travels Right before reverse along tape)
@@ -76,6 +79,9 @@ static const char *StateNames[] = {
     "GateLineUp",
     "GateLineUp2",
     "GateLineUp3",
+    "BumperGoingLeft",
+    "BumperGoingRight",
+
     "Snake2",
     "Snake25",
     "Snake3",
@@ -173,6 +179,8 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     static uint8_t WallCounter = 0;
     static uint8_t RAMCounter = 0;
 
+    int wait;
+
     ES_Tattle(); // trace call stack
 
     switch (CurrentState)
@@ -197,21 +205,37 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case Random:
+        ////////////////////    HIT A BUMPER    ////////////////////
+        if (ThisEvent.EventType == ES_BUMPERS)
+        {
+            Motors_Backward();
+            DELAY(200);
+            Tank_Right(MOTOR_MAXIMUM);
+            ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        ////////////////////    HIT A BUMPER    ////////////////////
+
+        if (ThisEvent.EventType == ES_NO_EVENT)
+        {
+            Motors_Forward(MOTOR_MAXIMUM);
+        }
+        if (ES_TAPESENSORS) // Turning away from tape
+        {
+            ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
+            Tank_Right(MOTOR_MAXIMUM);
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
         if (ThisEvent.EventType == ES_TIMEOUT) // Turning away from tape TIMER
         {
             if (ThisEvent.EventParam == TIMER_TURN)
             {
                 Motors_Forward(MOTOR_MAXIMUM);
             }
-        }
-        if (ES_TAPESENSORS) // Turning away from tape
-        {
-            printf("\r\nRandom: Tape Sensor");
-            ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
-            Tank_Right(MOTOR_MAXIMUM);
-            nextState = Random;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_WALLSENSORS) // Found wall, Transition
         {
@@ -224,8 +248,34 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         break;
 
+    case BumperGoingLeft:
+        ////////////////////    HIT A BUMPER    ////////////////////
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_OBSTACLE))
+        {
+            Robot_LeftWheelSpeed(1000);
+            Robot_RightWheelSpeed(700);
+            nextState = WallRide_Left;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        ////////////////////    HIT A BUMPER    ////////////////////
+        break;
     case WallRide_Left: // Wall ride untill you find tape, then 180 in PT 2
                         // see sensor, turn, timer up, forward, reppeat
+        ////////////////////    HIT A BUMPER    ////////////////////
+        if (ThisEvent.EventType == ES_BUMPERS)
+        {
+            Motors_Backward();
+            DELAY(200);
+            Tank_Left(MOTOR_MAXIMUM);
+            ES_Timer_InitTimer(TIMER_OBSTACLE, TIMER_OBSTACLE_CLICKS);
+            nextState = BumperGoingLeft;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+        ////////////////////    HIT A BUMPER    ////////////////////
+
         if (ThisEvent.EventType == ES_WALLSENSORS)
         {
             Tank_Left(1000);
@@ -259,7 +309,33 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         break;
 
+    case BumperGoingRight:
+        ////////////////////    HIT A BUMPER    ////////////////////
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_OBSTACLE))
+        {
+            Robot_LeftWheelSpeed(700);
+            Robot_RightWheelSpeed(1000);
+            nextState = WallRide_Right;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        ////////////////////    HIT A BUMPER    ////////////////////
+        break;
     case WallRide_Right: // Follow wall going right to tape, Path #1
+        ////////////////////    HIT A BUMPER    ////////////////////
+        if (ThisEvent.EventType == ES_BUMPERS)
+        {
+            Motors_Backward();
+            DELAY(200);
+            Tank_Right(MOTOR_MAXIMUM);
+            ES_Timer_InitTimer(TIMER_OBSTACLE, TIMER_OBSTACLE_CLICKS);
+            nextState = BumperGoingRight;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+        ////////////////////    HIT A BUMPER    ////////////////////
+
         if (ThisEvent.EventType == ES_TIMEOUT)
         {
             Robot_LeftWheelSpeed(1000);

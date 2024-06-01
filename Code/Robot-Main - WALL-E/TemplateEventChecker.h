@@ -59,10 +59,13 @@
  * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
 uint8_t TemplateCheckBattery(void);
 
-uint8_t Bumper_FL(void);
-uint8_t Bumper_FR(void);
-uint8_t Bumper_AllBits(void);
-uint8_t Read_Bumpers(void);
+// uint8_t Bumper_FL(void);
+// uint8_t Bumper_FR(void);
+// uint8_t Bumper_AllBits(void);
+// uint8_t Read_Bumpers(void);
+
+uint8_t Bumper_Left(void);
+uint8_t Bumper_Right(void);
 
 uint8_t Read_TrackWireSensor(void);
 

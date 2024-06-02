@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/Robot-Main.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=Robot-Main.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=robot-main/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/Robot-Main_-_WALL-E.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=Robot-Main_-_WALL-E.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=robot-main-wall-e/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/robot-main/bin
+makeDirectory ${TMPDIR}/robot-main-wall-e/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/robot-main.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/robot-main-wall-e.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/robot-main.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/robot-main-wall-e.tar *
 checkReturnCode
 
 # Cleanup

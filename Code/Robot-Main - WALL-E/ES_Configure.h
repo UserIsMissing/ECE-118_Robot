@@ -54,8 +54,8 @@ typedef enum {
     // ES_BUMPERS,     // Bumper Event
     ES_BUMPER_LEFT,
     ES_BUMPER_RIGHT,
-    ES_NO_BUMPER_LEFT,
-    ES_NO_BUMPER_RIGHT,
+    // ES_NO_BUMPER_LEFT,
+    // ES_NO_BUMPER_RIGHT,
 
     ES_TAPESENSOR_FL,   // Tape Sensor Event FRONT LEFT
     ES_TAPESENSOR_FR,   // Tape Sensor Event FRONT RIGHT
@@ -85,11 +85,11 @@ static const char *EventNames[] = {
     "TRACKWIRE_DETECTED",
     "TRACKWIRE_NOT_DETECTED",
 
-    "ES_BUMPERS",       // Bumper Event
+    // "ES_BUMPERS",       // Bumper Event
     "ES_BUMPER_LEFT",
     "ES_BUMPER_RIGHT",
-    "ES_NO_BUMPER_LEFT",
-    "ES_NO_BUMPER_RIGHT",
+    // "ES_NO_BUMPER_LEFT",
+    // "ES_NO_BUMPER_RIGHT",
 
     "ES_TAPESENSOR_FL",   // Tape Sensor Event FRONT LEFT
     "ES_TAPESENSOR_FR",   // Tape Sensor Event FRONT RIGHT
@@ -121,11 +121,11 @@ static const char *EventNames[] = {
 #define TIMER1_RESP_FUNC PostTemplateHSM
 #define TIMER2_RESP_FUNC PostTemplateHSM
 #define TIMER3_RESP_FUNC PostTemplateHSM
-#define TIMER4_RESP_FUNC TIMER_UNUSED
-#define TIMER5_RESP_FUNC TIMER_UNUSED
-#define TIMER6_RESP_FUNC TIMER_UNUSED
-#define TIMER7_RESP_FUNC TIMER_UNUSED
-#define TIMER8_RESP_FUNC TIMER_UNUSED
+#define TIMER4_RESP_FUNC PostTemplateHSM
+#define TIMER5_RESP_FUNC PostTemplateHSM
+#define TIMER6_RESP_FUNC PostTemplateHSM
+#define TIMER7_RESP_FUNC PostTemplateHSM
+#define TIMER8_RESP_FUNC PostTemplateHSM
 #define TIMER9_RESP_FUNC TIMER_UNUSED
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
@@ -153,6 +153,10 @@ static const char *EventNames[] = {
 #define TIMER_90_CLICKS 1600         // 800 too short
 #define TIMER_RAM_GATE_CLICKS 10000
 
+// For object avoidance at wall
+#define TIMER_90_TANK_CLICKS 600    // 1200 is a 180
+#define TIMER_OBJ_STRAIGHT_CLICKS 800
+
 // TIMER for final wait at gate beforerestarting loop
 #define TIMER_GATEWAIT 3
 #define TIMER_GATEWAIT_CLICKS 5000
@@ -171,7 +175,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 5
+#define NUM_SERVICES 6
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service
@@ -244,11 +248,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 5
 #if NUM_SERVICES > 5
 // the header file with the public fuction prototypes
-#define SERV_5_HEADER "TestService.h"
+#define SERV_5_HEADER "TemplateHSM.h"
 // the name of the Init function
-#define SERV_5_INIT TestServiceInit
+#define SERV_5_INIT InitTemplateHSM
 // the name of the run function
-#define SERV_5_RUN TestServiceRun
+#define SERV_5_RUN RunTemplateHSM
 // How big should this services Queue be?
 #define SERV_5_QUEUE_SIZE 3
 #endif
@@ -257,11 +261,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 6
 #if NUM_SERVICES > 6
 // the header file with the public fuction prototypes
-#define SERV_6_HEADER "TestService.h"
+#define SERV_6_HEADER "TemplateHSM.h"
 // the name of the Init function
-#define SERV_6_INIT TestServiceInit
+#define SERV_6_INIT InitTemplateHSM
 // the name of the run function
-#define SERV_6_RUN TestServiceRun
+#define SERV_6_RUN RunTemplateHSM
 // How big should this services Queue be?
 #define SERV_6_QUEUE_SIZE 3
 #endif
@@ -270,11 +274,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 7
 #if NUM_SERVICES > 7
 // the header file with the public fuction prototypes
-#define SERV_7_HEADER "TestService.h"
+#define SERV_7_HEADER "TemplateHSM.h"
 // the name of the Init function
-#define SERV_7_INIT TestServiceInit
+#define SERV_7_INIT InitTemplateHSM
 // the name of the run function
-#define SERV_7_RUN TestServiceRun
+#define SERV_7_RUN RunTemplateHSM
 // How big should this services Queue be?
 #define SERV_7_QUEUE_SIZE 3
 #endif

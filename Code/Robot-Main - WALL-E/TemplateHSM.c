@@ -47,6 +47,7 @@ typedef enum
 {
     InitPState,
     Random,
+    WallBump,
     WallRide_Left,
     WallRide_Left180,
     WallRide_Right, // Wall Follow
@@ -56,6 +57,7 @@ typedef enum
     GateLineUp3,
     BumperGoingLeft,
     BumperGoingRight,
+    BumperGoingRight_2,
 
     Snake2,   // Snake pass #2 (Travels Left)
     Snake25,  // Snake 2.5 is used for the 180 reverse
@@ -67,11 +69,13 @@ typedef enum
     RAM,
     RAM2,
     RAM3,
+    Restart,
 } TemplateHSMState_t;
 
 static const char *StateNames[] = {
     "InitPState",
     "Random",
+    "WallBump",
     "WallRide_Left",
     "WallRide_Left180",
     "WallRide_Right",
@@ -81,6 +85,7 @@ static const char *StateNames[] = {
     "GateLineUp3",
     "BumperGoingLeft",
     "BumperGoingRight",
+    "BumperGoingRight_2",
 
     "Snake2",
     "Snake25",
@@ -92,6 +97,7 @@ static const char *StateNames[] = {
     "RAM",
     "RAM2",
     "RAM3",
+    "Restart",
 };
 
 /*******************************************************************************
@@ -176,8 +182,8 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     // Snake along the wall 3 times then do a pivot and find gate
     // Left, Right, Left, Left pivot (or just go right again) and find gate
-    static uint8_t WallCounter = 0;
-    static uint8_t RAMCounter = 0;
+    static uint8_t WallCounter;
+    static uint8_t RAMCounter;
 
     int wait;
 
@@ -197,7 +203,11 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             // now put the machine into the actual initial state
 
             // INIT_ALL();
+            WallCounter = 0;
+            RAMCounter = 0;
+
             Motors_Forward(MOTOR_MAXIMUM);
+            // nextState = GateLineUp3;
             nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -206,23 +216,23 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     case Random:
         ////////////////////    HIT A BUMPER    ////////////////////
-        if (ThisEvent.EventType == ES_BUMPERS)
+        if ((ThisEvent.EventType == ES_BUMPER_LEFT) || (ThisEvent.EventType == ES_BUMPER_RIGHT))
         {
-            Motors_Backward();
-            DELAY(200);
-            Tank_Right(MOTOR_MAXIMUM);
-            ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
-            nextState = Random;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            ES_Timer_InitTimer(TIMER_TURN, TIMER_OBSTACLE_CLICKS);
+            Robot_LeftWheelSpeed(-700);
+            Robot_RightWheelSpeed(-1000);
+            // nextState = Random;
+            // makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
         }
         ////////////////////    HIT A BUMPER    ////////////////////
 
-        if (ThisEvent.EventType == ES_NO_EVENT)
-        {
-            Motors_Forward(MOTOR_MAXIMUM);
-        }
-        if (ES_TAPESENSORS) // Turning away from tape
+        // if (ThisEvent.EventType == ES_NO_EVENT)
+        // {
+        //     Motors_Forward(MOTOR_MAXIMUM);
+        // }
+        // if (ES_TAPESENSORS) // Turning away from tape
+        if ((ThisEvent.EventType == ES_TAPESENSOR_FL) || (ThisEvent.EventType == ES_TAPESENSOR_FR) /* || (ThisEvent.EventType == ES_TAPESENSOR_RL) || (ThisEvent.EventType == ES_TAPESENSOR_RR) */)
         {
             ES_Timer_InitTimer(TIMER_TURN, TIMER_TURN_CLICKS);
             Tank_Right(MOTOR_MAXIMUM);
@@ -230,48 +240,102 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_TURN)) // Turning away from tape TIMER
+        if ((ThisEvent.EventType == ES_TIMEOUT) /* && (ThisEvent.EventParam == TIMER_TURN) */) // Turning away from tape TIMER
         {
             // if (ThisEvent.EventParam == TIMER_TURN)
             // {
-                Motors_Forward(MOTOR_MAXIMUM);
+            Motors_Forward(MOTOR_MAXIMUM);
+            // }
+            // if (ThisEvent.EventParam == TIMER_OBSTACLE)
+            // {
+            // Motors_Forward(MOTOR_MAXIMUM);
             // }
         }
-        if (ThisEvent.EventType == ES_WALLSENSORS) // Found wall, Transition
+        if (ThisEvent.EventType == ES_WALLSENSORS)
+        {
+            ES_Timer_InitTimer(TIMER_TURN, 200);
+            nextState = WallBump;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+        break;
+
+    case WallBump:
+        if ((ThisEvent.EventType == ES_BUMPER_LEFT) || (ThisEvent.EventType == ES_BUMPER_RIGHT))
+        {
+            ES_Timer_InitTimer(TIMER_TURN, TIMER_OBSTACLE_CLICKS);
+            Robot_LeftWheelSpeed(-700);
+            Robot_RightWheelSpeed(-1000);
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+        else if (ThisEvent.EventType == ES_TIMEOUT)
         {
             Robot_LeftWheelSpeed(-850);
             Robot_RightWheelSpeed(-1);
-
             nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
+            break;
         }
         break;
 
     case BumperGoingLeft:
         ////////////////////    HIT A BUMPER    ////////////////////
-        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_OBSTACLE))
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 1)) // Start 1st 90 degree turn - left
         {
-            Robot_LeftWheelSpeed(1000);
-            Robot_RightWheelSpeed(700);
+            ES_Timer_InitTimer(2, TIMER_90_TANK_CLICKS); // TIMER_180
+            Tank_Left(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 2)) // TIMER_180 - go forward
+        {
+            ES_Timer_InitTimer(3, TIMER_OBJ_STRAIGHT_CLICKS);
+            Motors_Forward(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 3)) // Start 2nd 90 degree turn - right
+        {
+            ES_Timer_InitTimer(4, TIMER_90_TANK_CLICKS);
+            Tank_Right(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 4)) // Go forward
+        {
+            ES_Timer_InitTimer(5, TIMER_OBJ_STRAIGHT_CLICKS + 1000);
+            Motors_Forward(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 5)) // Start 3rd 90 degree turn - right
+        {
+            ES_Timer_InitTimer(6, TIMER_90_TANK_CLICKS);
+            Tank_Right(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 6)) // Go forward
+        {
+            Motors_Forward(1000);
             nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
+            // ES_Timer_InitTimer(TIMER_TURN, 200);
+            // nextState = WallBump;
+            // makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
+            // break;
         }
-        ////////////////////    HIT A BUMPER    ////////////////////
         break;
+        ////////////////////    HIT A BUMPER    ////////////////////
     case WallRide_Left: // Wall ride untill you find tape, then 180 in PT 2
                         // see sensor, turn, timer up, forward, reppeat
         ////////////////////    HIT A BUMPER    ////////////////////
-        if (ThisEvent.EventType == ES_BUMPERS)
+        if ((ThisEvent.EventType == ES_BUMPER_LEFT) || (ThisEvent.EventType == ES_BUMPER_RIGHT))
+        // Reverse and transfer to bumper state
         {
-            Motors_Backward();
-            DELAY(200);
-            Tank_Left(MOTOR_MAXIMUM);
-            ES_Timer_InitTimer(TIMER_OBSTACLE, TIMER_OBSTACLE_CLICKS);
+            ES_Timer_InitTimer(1, 200); // TIMER_TURN
+            Robot_LeftWheelSpeed(-1000);
+            Robot_RightWheelSpeed(-1000);
             nextState = BumperGoingLeft;
             makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            // ThisEvent.EventType = ES_NO_EVENT;
             break;
         }
         ////////////////////    HIT A BUMPER    ////////////////////
@@ -279,12 +343,14 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_WALLSENSORS)
         {
             Tank_Left(1000);
+            // Robot_LeftWheelSpeed(650);
+            // Robot_RightWheelSpeed(1000);
         }
         if (ThisEvent.EventType == ES_NO_EVENT)
         {
-            Motors_Forward(1000);
+            // Motors_Forward(1000);
             Robot_LeftWheelSpeed(1000);
-            Robot_RightWheelSpeed(900);
+            Robot_RightWheelSpeed(650);
         }
         if (ES_TAPESENSORS) // 180, then start heading right after transitioning
         {
@@ -311,27 +377,70 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     case BumperGoingRight:
         ////////////////////    HIT A BUMPER    ////////////////////
-        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_OBSTACLE))
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 1)) // Start 1st 90 degree turn - left
         {
-            Robot_LeftWheelSpeed(700);
-            Robot_RightWheelSpeed(1000);
-            nextState = WallRide_Right;
+            ES_Timer_InitTimer(2, TIMER_90_TANK_CLICKS); // TIMER_180
+            Tank_Right(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 2)) // TIMER_180 - go forward
+        {
+            ES_Timer_InitTimer(3, TIMER_OBJ_STRAIGHT_CLICKS);
+            Motors_Forward(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 3)) // Start 2nd 90 degree turn - right
+        {
+            ES_Timer_InitTimer(4, TIMER_90_TANK_CLICKS);
+            Tank_Left(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 4)) // Go forward
+        {
+            ES_Timer_InitTimer(5, TIMER_OBJ_STRAIGHT_CLICKS + 1000);
+            Motors_Forward(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 5)) // Start 3rd 90 degree turn - right
+        {
+            ES_Timer_InitTimer(6, TIMER_90_TANK_CLICKS);
+            Tank_Left(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 6)) // Go forward
+        {
+            Motors_Forward(1000);
+            nextState = BumperGoingRight_2;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        ////////////////////    HIT A BUMPER    ////////////////////
         break;
-    case WallRide_Right: // Follow wall going right to tape, Path #1
-        ////////////////////    HIT A BUMPER    ////////////////////
+    case BumperGoingRight_2:
         if (ThisEvent.EventType == ES_BUMPERS)
         {
-            Motors_Backward();
-            DELAY(200);
-            Tank_Right(MOTOR_MAXIMUM);
-            ES_Timer_InitTimer(TIMER_OBSTACLE, TIMER_OBSTACLE_CLICKS);
-            nextState = BumperGoingRight;
+            ES_Timer_InitTimer(1, TIMER_90_CLICKS - 100);
+            Tank_Right(1000);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 1)) // 90 degree turn right
+        {
+            Motors_Stop();
+            nextState = WallRide_Right;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
+            // ES_Timer_InitTimer(TIMER_TURN, 200);
+            // nextState = WallBump;
+            // makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
+            // break;
+        }
+        break;
+        ////////////////////    HIT A BUMPER    ////////////////////
+    case WallRide_Right: // Follow wall going right to tape, Path #1
+        ////////////////////    HIT A BUMPER    ////////////////////
+        if ((ThisEvent.EventType == ES_BUMPER_LEFT) || (ThisEvent.EventType == ES_BUMPER_RIGHT))
+        // Reverse and transfer to bumper state
+        {
+            ES_Timer_InitTimer(1, 200); // TIMER_TURN
+            Robot_LeftWheelSpeed(-1000);
+            Robot_RightWheelSpeed(-1000);
+            nextState = BumperGoingRight;
+            makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
             break;
         }
         ////////////////////    HIT A BUMPER    ////////////////////
@@ -339,37 +448,40 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_TIMEOUT)
         {
             Robot_LeftWheelSpeed(1000);
-            Robot_RightWheelSpeed(700);
+            Robot_RightWheelSpeed(650); // Was 700
         }
         // TOO CLOSE TOO WALL
         if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RL_MASK))
         {
             Robot_LeftWheelSpeed(1000);
-            Robot_RightWheelSpeed(700);
+            Robot_RightWheelSpeed(650);
         }
         // TOO FAR FROM WALL
         if (ThisEvent.EventType == ES_NO_EVENT)
         {
-            Robot_LeftWheelSpeed(700);
+            Robot_LeftWheelSpeed(650);
             Robot_RightWheelSpeed(1000);
         }
 
         if (ES_TAPESENSORS)
         {
             WallCounter++;
-            if (WallCounter == 4)
+            if (WallCounter >= 4)
             {
                 Tank_Right(1000);
                 nextState = GateLineUp;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
-
-            // ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
-            Tank_Right(1000);
-            nextState = WallRide_Right180;
-            makeTransition = TRUE;
-            // ThisEvent.EventType = ES_NO_EVENT;
+            else
+            {
+                // ES_Timer_InitTimer(TIMER_180, TIMER_180_CLICKS);
+                Tank_Right(1000);
+                nextState = WallRide_Right180;
+                makeTransition = TRUE;
+                // ThisEvent.EventType = ES_NO_EVENT;
+            }
+            break;
         }
         break;
 
@@ -378,7 +490,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         {
             // printf("\r\nWallRide2");
             ES_Timer_InitTimer(TIMER_TURN, 200);
-            Tank_Left(700);
+            Tank_Left(1000);
             nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -388,7 +500,21 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case GateLineUp:
         if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RR_MASK))
         {
-            Reverse_Pivot_Right(900);
+            Motors_Backward();
+            // nextState = GateLineUp2;
+            // makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
+        }
+        if (ThisEvent.EventType == ES_TAPESENSOR_RR)
+        {
+            Reverse_Pivot_Right(1000);
+        }
+
+        // Hit back right sensor and then start the 2nd snake path. Moving left along the wall (with a gap)
+        if (ThisEvent.EventType == ES_TAPESENSOR_RL)
+        {
+            Motors_Stop();
+            Pivot_Left(1000);
             nextState = GateLineUp2;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -396,19 +522,37 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case GateLineUp2:
-        if (ThisEvent.EventType == ES_TAPESENSOR_RL)
-        {
-            Robot_RightWheelSpeed(700);
-            Robot_LeftWheelSpeed(0);
-        }
-        if (ThisEvent.EventType == ES_TAPESENSOR_RR)
-        {
-            Motors_Stop();
-            Pivot_Left(700);
-        }
+        // if (ThisEvent.EventType == ES_ENTRY)
+        // {
+        //     Pivot_Left(700);
+        // }
+        // if (ThisEvent.EventType == ES_TAPESENSOR_RL)
+        // {
+        //     Pivot_Left(700);
+
+        //     Motors_Backward();
+
+        //     nextState = GateLineUp3;
+        //     makeTransition = TRUE;
+        //     ThisEvent.EventType = ES_NO_EVENT;
+        // }
+
+        // if (ThisEvent.EventType == ES_TAPESENSOR_RR)
+        // {
+        //     Motors_Stop();
+        //     Pivot_Left(700);
+        // }
         if (ThisEvent.EventType == ES_TAPESENSOR_FL)
         {
-            Motors_Stop();
+            Robot_LeftWheelSpeed(-600);
+            Robot_RightWheelSpeed(-1000);
+            // nextState = GateLineUp3;
+            // makeTransition = TRUE;
+            // ThisEvent.EventType = ES_NO_EVENT;
+        }
+        if (ThisEvent.EventType == ES_TAPESENSOR_RL)
+        {
+            Tank_Left(1000);
             nextState = GateLineUp3;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -416,7 +560,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case GateLineUp3:
-        if (ThisEvent.EventType == ES_ENTRY)
+        if (ThisEvent.EventType == ES_TAPESENSOR_FL)
         {
             Robot_LeftWheelSpeed(-1000);
             Robot_RightWheelSpeed(-1000);
@@ -550,18 +694,14 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         */
 
     case RAM:
-        WallCounter = 0;
-        RAMCounter++;
         if (ThisEvent.EventType == ES_ENTRY)
         {
-            Robot_LeftWheelSpeed(-1000);
-            Robot_RightWheelSpeed(-1000);
             ES_Timer_InitTimer(TIMER_TURN, 200); // Go Forward
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_TURN))
         {
             ES_Timer_InitTimer(TIMER_180, 300); // Reverse
-            Motors_Forward(800);
+            // Motors_Forward(800);
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180))
         {
@@ -570,43 +710,42 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         if (ThisEvent.EventType == ES_WALLSENSOR_BACKGATE)
         {
-            if (RAMCounter < 2)
-            {
-                nextState = RAM2;
-                makeTransition = TRUE;
-                ThisEvent.EventType = ES_NO_EVENT;
-            }
-            else
-            {
-                nextState = RAM;
-                makeTransition = TRUE;
-                ThisEvent.EventType = ES_NO_EVENT;
-            }
+            nextState = RAM2;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
     case RAM2:
         if (ThisEvent.EventType == ES_ENTRY)
         {
-            ES_Timer_InitTimer(TIMER_GATEWAIT, TIMER_GATEWAIT_CLICKS);
-            ES_Timer_InitTimer(TIMER_TURN, 200); // Go Forward
+            ES_Timer_InitTimer(TIMER_TURN, 600); // Go Forward
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_TURN))
         {
-            ES_Timer_InitTimer(TIMER_180, 300); // Reverse
+            ES_Timer_InitTimer(TIMER_180, 600); // Reverse
             Motors_Forward(800);
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180))
         {
+            ES_Timer_InitTimer(TIMER_TURN, 5000);
             Robot_LeftWheelSpeed(-1000);
             Robot_RightWheelSpeed(-1000);
+            nextState = Restart;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_WALLSENSOR_BACKGATE)
-        {
-            Motors_Stop();
-        }
+        // if (ThisEvent.EventType == ES_WALLSENSOR_BACKGATE)
+        // {
+        //     ES_Timer_InitTimer(TIMER_GATEWAIT, 5000);
+        //     // Motors_Stop();
+        //     nextState = Restart;
+        //     makeTransition = TRUE;
+        //     ThisEvent.EventType = ES_NO_EVENT;
+        // }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_GATEWAIT))
         {
-            nextState = RAM3;
+            Pivot_Right(1000);
+            nextState = Restart;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -615,15 +754,33 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     case RAM3:
         if (ThisEvent.EventType == ES_ENTRY)
         {
-            WallCounter = 0;
-
-            ES_Timer_InitTimer(TIMER_TURN, 500);
-            Robot_LeftWheelSpeed(900);
-            Robot_RightWheelSpeed(1);
+            ES_Timer_InitTimer(TIMER_TURN, 600); // Go Forward
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_TURN))
         {
-            Motors_Forward(MOTOR_MAXIMUM);
+            ES_Timer_InitTimer(TIMER_180, 600); // Reverse
+            Motors_Forward(800);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_180))
+        {
+            ES_Timer_InitTimer(TIMER_GATEWAIT, 5000);
+            Robot_LeftWheelSpeed(-1000);
+            Robot_RightWheelSpeed(-1000);
+        }
+        if (ThisEvent.EventType == ES_WALLSENSOR_BACKGATE)
+        {
+            ES_Timer_InitTimer(TIMER_GATEWAIT, 5000);
+            Motors_Stop();
+            nextState = Restart;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        break; // -Q
+
+    case Restart:
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == TIMER_TURN))
+        {
+            Pivot_Right(1000);
             nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;

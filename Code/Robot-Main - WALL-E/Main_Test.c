@@ -35,6 +35,8 @@
     LED_Init();
     LED_AddBanks(0x7);
 
+    IO_PortsSetPortOutputs(PORTW, PIN6);
+
     /* ------------------ SENSORS ------------------ */
     IO_PortsSetPortInputs(PORTZ, PIN3); // Front Left Bumper
     IO_PortsSetPortInputs(PORTZ, PIN4); // Front Right Bumper

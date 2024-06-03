@@ -23,7 +23,7 @@
 //#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostGenericService
 
 //define for TattleTale
-#define USE_TATTLETALE
+// #define USE_TATTLETALE
 
 //uncomment to supress the entry and exit events
 //#define SUPPRESS_EXIT_ENTRY_IN_TATTLE
@@ -163,8 +163,8 @@ static const char *EventNames[] = {
 
 //TIMER for reverse after hitting obstacle
 #define TIMER_OBSTACLE 4
-#define TIMER_OBSTACLE_CLICKS 200
-
+//#define TIMER_OBSTACLE_CLICKS 200
+#define TIMER_OBSTACLE_CLICKS 700
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 

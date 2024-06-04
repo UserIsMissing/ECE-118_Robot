@@ -23,7 +23,7 @@
 //#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostGenericService
 
 //define for TattleTale
-// #define USE_TATTLETALE
+//#define USE_TATTLETALE
 
 //uncomment to supress the entry and exit events
 //#define SUPPRESS_EXIT_ENTRY_IN_TATTLE
@@ -110,7 +110,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */ Read_TrackWireSensor, WallSensors_ReadAll, TapeSensor_FL, TapeSensor_FR, TapeSensor_RL, TapeSensor_RR, WallSensor_BackGate, Bumper_Left, Bumper_Right, // Read_Bumpers,
+#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */ Read_TrackWireSensor, WallSensors_ReadAll, TapeSensor_FL, TapeSensor_FR, TapeSensor_RL, TapeSensor_RR, Bumper_Left, Bumper_Right, // Read_Bumpers,
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
@@ -164,7 +164,7 @@ static const char *EventNames[] = {
 //TIMER for reverse after hitting obstacle
 #define TIMER_OBSTACLE 4
 //#define TIMER_OBSTACLE_CLICKS 200
-#define TIMER_OBSTACLE_CLICKS 700
+#define TIMER_OBSTACLE_CLICKS 300
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 

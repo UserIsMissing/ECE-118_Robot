@@ -268,9 +268,9 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         else if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 1))
         {
-            Robot_LeftWheelSpeed(-900);
+            Robot_LeftWheelSpeed(-1023);
             Robot_RightWheelSpeed(-1);
-            nextState = WallRide_Left;
+            nextState = WallRide_Left_0;
             makeTransition = TRUE;
             // ThisEvent.EventType = ES_NO_EVENT;
             break;
@@ -279,14 +279,20 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     case WallRide_Left_0:
     
-        // if (ThisEvent.EventType == ES_WALLSENSORS)
-        // {
-        //     Tank_Left(1000);
-        // }
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 1) || (ThisEvent.EventParam == 2) || (ThisEvent.EventParam == 8)))
+        {
+            Robot_LeftWheelSpeed(-1000);
+            Robot_RightWheelSpeed(-700);
+        }
         if (ThisEvent.EventType == ES_NO_EVENT)
         {
-            Robot_LeftWheelSpeed(900);
-            Robot_RightWheelSpeed(850);
+            Motors_Stop();
+            Robot_LeftWheelSpeed(700);
+            Robot_RightWheelSpeed(1000);
+        }
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == 4))
+        {
+            Tank_Left(800);
             nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -351,7 +357,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         ////////////////////    HIT A BUMPER    ////////////////////
 
-        if (ThisEvent.EventType == ES_WALLSENSORS)
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 2) || (ThisEvent.EventParam == 4)))
         {
             //Tank_Left(1000);
             Robot_LeftWheelSpeed(1);
@@ -369,6 +375,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
             Motors_Stop();
             Tank_Left(1000);
+            ES_Timer_InitTimer(4, 3000);
             nextState = WallRide_Left180;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -376,8 +383,17 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case WallRide_Left180: // 180 on the tape to setup for snake
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 4))
+        {
+            Motors_Forward(850);
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
         if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RL_MASK))
         {
+            ES_Timer_StopTimer(4);
             ES_Timer_InitTimer(TIMER_TURN, 200);
             Tank_Right(700);
             nextState = WallRide_Right;
@@ -472,8 +488,8 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ES_TAPESENSORS)
         {
             WallCounter++;
-            // if (WallCounter >= 4)
-            if (WallCounter >= 2)
+            if (WallCounter >= 4)
+            // if (WallCounter >= 6)
             {
                 Tank_Right(1000);
                 nextState = GateLineUp;
@@ -482,7 +498,9 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             }
             else
             {
+                Motors_Stop();
                 Tank_Right(1000);
+                ES_Timer_InitTimer(4, 3000);
                 nextState = WallRide_Right180;
                 makeTransition = TRUE;
                 // ThisEvent.EventType = ES_NO_EVENT;
@@ -492,6 +510,14 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         break;
 
     case WallRide_Right180: // 180 on the tape to setup for snake
+    if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 4))
+        {
+            Motors_Forward(850);
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
         if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RR_MASK))
         {
             ES_Timer_InitTimer(TIMER_TURN, 200);
@@ -553,21 +579,28 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_ENTRY)
         {
             RAMCounter++;
-            ES_Timer_InitTimer(1, 400); // Go Forward
+            ES_Timer_InitTimer(1, 500); // Go Forward
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 1))
         {
-            ES_Timer_InitTimer(2, 300); // Reverse
-            Motors_Forward(800);
+            ES_Timer_InitTimer(2, 400); // Reverse
+            Motors_Forward(900);
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 2))
         {
-            ES_Timer_InitTimer(3, 400);
+            ES_Timer_InitTimer(3, 500);
             Robot_LeftWheelSpeed(-1000);
             Robot_RightWheelSpeed(-1000);
         }
         if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 3))
         {
+            ES_Timer_InitTimer(4, 800);
+            Robot_LeftWheelSpeed(-1);
+            Robot_RightWheelSpeed(-1);
+        }
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 4))
+        {
+            Motors_Stop();
             if (RAMCounter >= 4)
             {
                 Motors_Stop();
@@ -589,12 +622,12 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_ENTRY)
         {
             //IO_PortsWritePort(PORTW, PIN6);
-            ES_Timer_InitTimer(1, 3500);
+            ES_Timer_InitTimer(4, 2500);
             RAMCounter = 0;
             WallCounter = 0;
             Motors_Stop();
         }
-        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 1))
+        if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 4))
         {
             //IO_PortsClearPortBits(PORTW, PIN6);
             Pivot_Right(1000);

@@ -514,42 +514,42 @@ uint8_t WallSensors_ReadAll(void)
 /*******************************************************************************
  * WALL SENSOR BACK GATE                                                       *
  ******************************************************************************/
-// uint8_t WallSensor_BackGate(void)
-// {
-//     static ES_EventTyp_t lastEvent = ES_WALLSENSOR_BACKGATE;
-//     ES_EventTyp_t curEvent;
-//     ES_Event thisEvent;
-//     uint8_t returnVal = FALSE;
+uint8_t WallSensor_BackGate(void)
+{
+    static ES_EventTyp_t lastEvent = ES_WALLSENSOR_BACKGATE;
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
 
-//     uint16_t WallSensors = (!((IO_PortsReadPort(PORTW) & PIN4) >> 4));
+    uint16_t WallSensors = (!((IO_PortsReadPort(PORTW) & PIN4) >> 4));
 
-//     if (WallSensors != 0)
-//     {
-//         //printf("Wall Sensor %d \r\n", WallSensors);
-//         curEvent = ES_WALLSENSOR_BACKGATE;
-//     }
-//     else
-//     {
-//         curEvent = ES_NO_EVENT;
-//     }
+    if (WallSensors != 0)
+    {
+        //printf("Wall Sensor %d \r\n", WallSensors);
+        curEvent = ES_WALLSENSOR_BACKGATE;
+    }
+    else
+    {
+        curEvent = ES_NO_EVENT;
+    }
 
-//     if (curEvent != lastEvent)
-//     { // check for change from last time
-//         thisEvent.EventType = curEvent;
-//         thisEvent.EventParam = WallSensors;
-//         returnVal = TRUE;
-//         lastEvent = curEvent; // update history
-// #ifndef EVENTCHECKER_TEST     // keep this as is for test harness
-//         // PostGenericService(thisEvent);
-//         // PostTemplateService(thisEvent);
-//         PostTemplateHSM(thisEvent);
-//         // PostTemplateFSM(thisEvent);
-// #else
-//         SaveEvent(thisEvent);
-// #endif
-//     }
-//     return (returnVal);
-// }
+    if (curEvent != lastEvent)
+    { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = WallSensors;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST     // keep this as is for test harness
+        // PostGenericService(thisEvent);
+        // PostTemplateService(thisEvent);
+        PostTemplateHSM(thisEvent);
+        // PostTemplateFSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif
+    }
+    return (returnVal);
+}
 
 /*******************************************************************************
  * ANALOG WALL SENSOR                                                          *

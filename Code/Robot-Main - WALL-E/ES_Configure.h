@@ -23,7 +23,7 @@
 //#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostGenericService
 
 //define for TattleTale
-//#define USE_TATTLETALE
+#define USE_TATTLETALE
 
 //uncomment to supress the entry and exit events
 //#define SUPPRESS_EXIT_ENTRY_IN_TATTLE
@@ -110,7 +110,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */ Read_TrackWireSensor, WallSensors_ReadAll, TapeSensor_FL, TapeSensor_FR, TapeSensor_RL, TapeSensor_RR, Bumper_Left, Bumper_Right, // Read_Bumpers,
+#define EVENT_CHECK_LIST /* TemplateCheckBattery,  */ Read_TrackWireSensor, WallSensors_ReadAll, WallSensor_BackGate, TapeSensor_FL, TapeSensor_FR, TapeSensor_RL, TapeSensor_RR, Bumper_Left, Bumper_Right, // Read_Bumpers,
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
@@ -154,8 +154,8 @@ static const char *EventNames[] = {
 #define TIMER_RAM_GATE_CLICKS 10000
 
 // For object avoidance at wall
-#define TIMER_90_TANK_CLICKS 600    // 1200 is a 180
-#define TIMER_OBJ_STRAIGHT_CLICKS 800
+#define TIMER_90_TANK_CLICKS 500    // 1200 is a 180
+#define TIMER_OBJ_STRAIGHT_CLICKS 1000  // was 800
 
 // TIMER for final wait at gate beforerestarting loop
 #define TIMER_GATEWAIT 3

@@ -281,18 +281,18 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     
         if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 1) || (ThisEvent.EventParam == 2) || (ThisEvent.EventParam == 8)))
         {
-            Robot_LeftWheelSpeed(-1000);
+            Robot_LeftWheelSpeed(-900);
             Robot_RightWheelSpeed(-700);
         }
         if (ThisEvent.EventType == ES_NO_EVENT)
         {
             Motors_Stop();
             Robot_LeftWheelSpeed(700);
-            Robot_RightWheelSpeed(1000);
+            Robot_RightWheelSpeed(900);
         }
         if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == 4))
         {
-            Tank_Left(800);
+            Tank_Left(1000);
             nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -356,7 +356,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             break;
         }
         ////////////////////    HIT A BUMPER    ////////////////////
-
+        //if (ThisEvent.EventType == ES_WALLSENSORS)
         if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 2) || (ThisEvent.EventParam == 4)))
         {
             //Tank_Left(1000);

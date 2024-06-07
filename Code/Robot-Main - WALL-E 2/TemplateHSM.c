@@ -218,10 +218,6 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
 
     case Random:
         ////////////////////    HIT A BUMPER    ////////////////////
-        if (ThisEvent.EventType == ES_ENTRY)
-        {
-            Motors_Forward(900);
-        }
         if ((ThisEvent.EventType == ES_BUMPER_LEFT) || (ThisEvent.EventType == ES_BUMPER_RIGHT))
         {
             ES_Timer_InitTimer(2, TIMER_OBSTACLE_CLICKS);
@@ -257,6 +253,14 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             ThisEvent.EventType = ES_NO_EVENT;
             break;
         }
+        // if ((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 4)) // Came from objectbumper->tape (BumperGoingRight and BumperGoingLeft)
+        // {
+        //     Motors_Stop();
+        //     nextState = Random;
+        //     makeTransition = TRUE;
+        //     ThisEvent.EventType = ES_NO_EVENT;
+        //     break;
+        // }
         break;
 
     case WallBump:
@@ -337,6 +341,17 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
+        }
+        if (ThisEvent.EventType == ES_TAPESENSORS)
+        {
+            // ES_Timer_InitTimer(4, 500);
+            Motors_Backward();
+            WallCounter = 0;
+            RAMCounter = 0;
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
         }
         break;
         ////////////////////    HIT A BUMPER    ////////////////////
@@ -442,10 +457,14 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         if (ThisEvent.EventType == ES_TAPESENSORS)
         {
+            // ES_Timer_InitTimer(4, 500);
             Motors_Backward();
+            WallCounter = 0;
+            RAMCounter = 0;
             nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
+            break;
         }
         break;
     case BumperGoingRight_2:
@@ -543,8 +562,8 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == WALL_RR_MASK))
         {
             // Motors_Backward();
-            Robot_LeftWheelSpeed(750);
-            Robot_RightWheelSpeed(800);
+            Robot_LeftWheelSpeed(-750);
+            Robot_RightWheelSpeed(-800);
         }
         if (ThisEvent.EventType == ES_TAPESENSOR_RR)
         {

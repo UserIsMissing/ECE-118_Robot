@@ -1,1 +1,0 @@
- $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -I"." -I"../../0-ECE118/ECE118/include/."   -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  C:\Users\qinyu\OneDrive\Desktop\Github Projects\ECE-118_Robot\Code\Robot-Main - WALL-E 2.0\Main_Test.c

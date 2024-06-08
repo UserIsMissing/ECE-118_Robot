@@ -186,6 +186,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     // Left, Right, Left, Left pivot (or just go right again) and find gate
     static uint8_t WallCounter;
     static uint8_t RAMCounter;
+    static uint8_t WallHelp;
 
     int wait;
 
@@ -207,6 +208,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
             // INIT_ALL();
             WallCounter = 0;
             RAMCounter = 0;
+            WallHelp = 0;
 
             Motors_Forward(MOTOR_MAXIMUM);
             //nextState = GateLineUp3;
@@ -245,10 +247,20 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         {
             Motors_Forward(MOTOR_MAXIMUM);
         }
-        if (ThisEvent.EventType == ES_WALLSENSORS)
+        // if (ThisEvent.EventType == ES_WALLSENSORS)
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 1) || (ThisEvent.EventParam == 2) || (ThisEvent.EventParam == 8)))
         {
             ES_Timer_InitTimer(1, 200);
             nextState = WallBump;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }
+        if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == 4))
+        {
+            Robot_LeftWheelSpeed(800);
+            Robot_RightWheelSpeed(1000);
+            nextState = Random;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
             break;
@@ -281,18 +293,21 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
     
         if ((ThisEvent.EventType == ES_WALLSENSORS) && ((ThisEvent.EventParam == 1) || (ThisEvent.EventParam == 2) || (ThisEvent.EventParam == 8)))
         {
-            Robot_LeftWheelSpeed(-900);
+            Robot_LeftWheelSpeed(-1000);
             Robot_RightWheelSpeed(-700);
         }
         if (ThisEvent.EventType == ES_NO_EVENT)
         {
             Motors_Stop();
             Robot_LeftWheelSpeed(700);
-            Robot_RightWheelSpeed(900);
+            Robot_RightWheelSpeed(1000);
         }
         if ((ThisEvent.EventType == ES_WALLSENSORS) && (ThisEvent.EventParam == 4))
         {
-            Tank_Left(1000);
+            ES_Timer_InitTimer(2, 1000);
+            Tank_Left(800);
+            //Robot_LeftWheelSpeed(700);
+            //Robot_RightWheelSpeed(900);
             nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -338,11 +353,6 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         ////////////////////    HIT A BUMPER    ////////////////////
     case WallRide_Left: // Wall ride untill you find tape, then 180 in PT 2
                         // see sensor, turn, timer up, forward, reppeat
-        // if (ThisEvent.EventType == ES_ENTRY)
-        // {
-        //     Robot_LeftWheelSpeed(1000);
-        //     Robot_RightWheelSpeed(950);
-        // }
         ////////////////////    HIT A BUMPER    ////////////////////
         if ((ThisEvent.EventType == ES_BUMPER_LEFT) || (ThisEvent.EventType == ES_BUMPER_RIGHT))
         // Reverse and transfer to bumper state
@@ -365,13 +375,22 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         }
         if (ThisEvent.EventType == ES_NO_EVENT)
         {
+            WallHelp = 1;
             // Motors_Forward(1000);
             Robot_LeftWheelSpeed(1000);
             Robot_RightWheelSpeed(900);
         }
+        if (((ThisEvent.EventType == ES_TIMEOUT) && (ThisEvent.EventParam == 2)) && (WallHelp == 0))
+        {
+            nextState = Random;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+            break;
+        }        
         if (ES_TAPESENSORS) // 180, then start heading right after transitioning
         {
             WallCounter++;
+            WallHelp = 0;
 
             Motors_Stop();
             Tank_Left(1000);
@@ -631,7 +650,7 @@ ES_Event RunTemplateHSM(ES_Event ThisEvent)
         {
             //IO_PortsClearPortBits(PORTW, PIN6);
             Pivot_Right(1000);
-            nextState = Random;
+            nextState = WallRide_Left;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }

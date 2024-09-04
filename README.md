@@ -5,8 +5,8 @@
 **Final Project Technical Report**
 
 - **Instructor**: Gabriel Elkaim
-- **Students**: Qingyuan Cao, Cole Schreiner, James Huang
-- **Emails**: [qcao10@ucsc.edu](mailto:qcao10@ucsc.edu) | [caschrei@ucsc.edu](mailto:caschrei@ucsc.edu) | [hhuan143@ucsc.edu](mailto:hhuan143@ucsc.edu)
+- **Students**: Cole Schreiner, Qingyuan Cao, James Huang
+- **Emails**: [caschrei@ucsc.edu](mailto:caschrei@ucsc.edu) | [qcao10@ucsc.edu](mailto:qcao10@ucsc.edu) | [hhuan143@ucsc.edu](mailto:hhuan143@ucsc.edu)
 - **Date**: June 14th, 2024
 
 ---

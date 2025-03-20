@@ -1,5 +1,7 @@
 <div align="center">
 
+***All code has been removed from this repo for our safety pertaining to academic honesty. Code may be available upon request***
+
 ![Enter image alt description](Images/uX0_Image_1.png)
 
 # ECE 118 - Final Project Technical Report

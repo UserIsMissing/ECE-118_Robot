@@ -1,3 +1,5 @@
+<div align="center">
+
 ![Enter image alt description](Images/uX0_Image_1.png)
 
 # ECE 118 - Final Project Technical Report
@@ -5,6 +7,8 @@
 ## Jack Baskin School of Engineering – ECE 118
 
 ![Enter image alt description](Images/bnB_Image_2.png)
+
+</div>
 
 <!-- **Final Project Technical Report** -->
 

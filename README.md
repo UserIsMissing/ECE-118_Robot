@@ -1,6 +1,7 @@
 <div align="center">
 
 ***All code has been removed from this repo for our safety pertaining to academic honesty. Code may be available upon request***
+**[__Technical Report Link__](https://docs.google.com/document/d/1Wgn5ZkHM9pPidNQZ0kCjF2wPv4Ox2kqkvy6qI0wORiY/edit?usp=sharing)**
 
 ![Enter image alt description](Images/uX0_Image_1.png)
 

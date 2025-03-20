@@ -29,8 +29,6 @@ The word "mechatronics" was first coined by Mr. Tetsuro Moria, a senior engineer
 
 # Project Specification
 
-# 
-
 ( As stated in the Project Spec Manual )
 
 Your task is to build a small autonomous robot (droid) that can effectively and robustly navigate a standardized field, and locate and trap the targets. You must identify the discharge location, and contain the balls or discharge them to the opponent’s field. You will receive points based on the number of balls left on your field at the end of the time (see field specs below). The match is won by cleaning up your field. You will be doing this in teams of three, over the next five weeks, during which time you will design, implement, test, and iterate until you can reliably complete the task. There will be practice fields in the labs and lots of help and guidance available to you. Don’t panic.
